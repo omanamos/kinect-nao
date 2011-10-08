@@ -28,10 +28,12 @@ namespace NaoKinectCV
     /// </summary>
     public partial class MainWindow : Window
     {
-        Runtime nui = new Runtime();
+        Runtime nui = null;//new Runtime();
         private int depthHeight;
         private int depthWidth;
         private SkeletonData _skel;
+        private icp_net.ManagedICP icp;
+        private double[,] current_head_points;
 
         public MainWindow()
         {
@@ -40,7 +42,6 @@ namespace NaoKinectCV
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
             nui.Initialize(RuntimeOptions.UseColor | RuntimeOptions.UseDepth | RuntimeOptions.UseSkeletalTracking);
             //nui.VideoFrameReady += new EventHandler<ImageFrameReadyEventArgs>(nui_VideoFrameReady);
             nui.DepthFrameReady += new EventHandler<ImageFrameReadyEventArgs>(nui_DepthFrameReady);
@@ -50,6 +51,7 @@ namespace NaoKinectCV
             nui.NuiCamera.ElevationAngle = Camera.ElevationMaximum;
             depthHeight = nui.DepthStream.Height;
             depthWidth = nui.DepthStream.Width;
+
             //_headPanning.Connect("127.0.0.1");
         }
 
@@ -83,33 +85,10 @@ namespace NaoKinectCV
             }
         }
 
-        void dumpToFile(Matrix<double> pts, string fname)
-        {
-            using (StreamWriter writer = new StreamWriter(fname))
-            {
-                for (int i = 0; i < pts.Rows; i++)
-                {
-
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append(i);
-                    sb.Append(" ");
-                    sb.Append(pts[i, 0]);
-                    sb.Append(" ");
-                    sb.Append(pts[i, 1]);
-                    sb.Append(" ");
-                    sb.Append(pts[i, 2]);
-                    sb.Append(" ");
-                    sb.Append(1); // Group ID
-                    writer.WriteLine(sb.ToString());
-                }
-            }
-        }
-
         void nui_DepthFrameReady(object sender, ImageFrameReadyEventArgs e)
         {
             // Depth is in mm
             short[][] depth = e.ImageFrame.ToDepthArray2D();
-            //image2.Source = e.ImageFrame.ToBitmapSource();
             if (this._skel != null)
             {
                 Matrix<double> data = new Matrix<double>(depthHeight * depthWidth, 3);
@@ -145,7 +124,7 @@ namespace NaoKinectCV
                 }
 
                 // Get a matrix of all of the points in the head
-                Matrix<double> head_pts = new Matrix<double>(head_points.Count, 3);
+                double[,] head_pts = new double[head_points.Count, 3];
                 for (int i=0; i < head_points.Count; i++)
                 {
                     MCvPoint3D32f p = head_points[i];
@@ -153,18 +132,105 @@ namespace NaoKinectCV
                     head_pts[i, 1] = p.y;
                     head_pts[i, 2] = p.z;
                 }
-                dumpToFile(head_pts, "head");
-                dumpToFile(data, "scene");
                 if (head_points.Count > 0)
                 {
-                    Matrix<double> evals = new Matrix<double>(1, 3);
-                    Matrix<double> avg = new Matrix<double>(1, 3);
-                    Matrix<double> evecs = new Matrix<double>(3, 3);
-                    Emgu.CV.CvInvoke.cvCalcPCA(head_pts.Ptr, avg.Ptr, evals.Ptr, evecs.Ptr, Emgu.CV.CvEnum.PCA_TYPE.CV_PCA_DATA_AS_ROW);
-                    Console.WriteLine("<" + evals[0, 0] + ", " + evals[0, 1] + ", " + evals[0, 2] + ">");
+                    if (this.icp == null)
+                    {
+                        this.current_head_points = head_pts;
+                        this.icp = new icp_net.ManagedICP(head_pts, head_pts.GetLength(0), 3);
+                    }
+                    else
+                    {
+                        double[,] R = new double[3, 3];
+                        R[0, 0] = 1.0;
+                        R[1, 1] = 1.0;
+                        R[2, 2] = 1.0;
+                        double[] t = new double[3];
+                        t[0] = head_pos.x;
+                        t[1] = head_pos.y;
+                        t[2] = head_pos.z;
+                        icp.fit(head_pts, head_pts.GetLength(0), R, t, -1);
+
+                        Matrix<double> Rot = new Matrix<double>(R);
+                        Matrix<double> new_pts_matrix = new Matrix<double>(head_pts);
+                        Matrix<double> trans = new Matrix<double>(t);
+                        // Move the new head to the origin
+                        for (int rowIdx = 0; rowIdx < new_pts_matrix.Rows; rowIdx++)
+                        {
+                            Matrix<double> ro = new_pts_matrix.GetRow(rowIdx);
+                            ro -= trans;
+                        }
+
+                        // And rotate it in to place with the other head
+                        new_pts_matrix *= Rot;
+                        double[,] new_points_array = new double[new_pts_matrix.Rows, 3];
+                        for (int i=0; i < new_pts_matrix.Rows; i++)
+                        {
+                            for (int j=0; j < 3; j++)
+                            {
+                                new_points_array[i, j] = new_pts_matrix[i, j];
+                            }
+                        }
+                        double[,] refined_head_points = refineHead(current_head_points, new_points_array);
+                        // And update our icp model
+                        this.icp = new icp_net.ManagedICP(refined_head_points, refined_head_points.GetLength(0), 3);
+                        this.current_head_points = refined_head_points;
+                    }
                 }
                 //= _skel.Joints[JointID.Head].Position;
             }
+        }
+
+        double[,] refineHead(double[,] head_points, double[,] new_head_points)
+        {
+            MCvPoint3D32f[] pts = new MCvPoint3D32f[head_points.GetLength(0)];
+            Dictionary<int, SortedList<double, int>> point_closests_map = new Dictionary<int,SortedList<double,int>>();
+            for (int i=0; i < head_points.GetLength(0); i++)
+            {
+                pts[i] = new MCvPoint3D32f((float)head_points[i, 0], (float)head_points[i, 1], (float)head_points[i, 2]);
+                point_closests_map[i] = new SortedList<double, int>();
+            }
+            
+            // For each point p0 in the new head find the closest point p_c in the original head
+            Emgu.CV.Flann.Index3D pts_index = new Emgu.CV.Flann.Index3D(pts);
+            MCvPoint3D32f[] new_head_pts = new MCvPoint3D32f[new_head_points.GetLength(0)];
+            for (int i = 0; i < new_head_points.GetLength(0); i++)
+            {
+                MCvPoint3D32f pt = new MCvPoint3D32f((float)new_head_points[i, 0], (float)new_head_points[i, 1], (float)new_head_points[i, 2]);
+                new_head_pts[i] = pt;
+                double dist = 0.0;
+                int idx = pts_index.ApproximateNearestNeighbour(pt, out dist);
+                point_closests_map[i].Add(dist, i);
+                // And add p0 to the sorted list of points which have marked p_c as their closest point.
+            }
+
+            // Then, add to the head every point other than the first one from each list.
+            List<MCvPoint3D32f> new_points = new List<MCvPoint3D32f>(pts);
+            foreach (int key in point_closests_map.Keys)
+            {
+                // A list of the points which think this point is the closest
+                SortedList<double, int> points_closest = point_closests_map[key];
+                if (points_closest.Count > 0)
+                {
+                    // Remove the closest point.
+                    points_closest.RemoveAt(0);
+                    // And add the rest of the points
+                    foreach (int i in points_closest.Values)
+                    {
+                        new_points.Add(new_head_pts[i]);
+                    }
+                }
+            }
+            
+            // Finally, return the newly extended array of points
+            double[,] return_pts = new double[new_points.Count, 3];
+            for (int i = 0; i < new_points.Count; i++)
+            {
+                return_pts[i, 0] = new_points[i].x;
+                return_pts[i, 1] = new_points[i].y;
+                return_pts[i, 2] = new_points[i].z;
+            }
+            return return_pts;
         }
     }
 }
