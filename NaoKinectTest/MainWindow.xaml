@@ -8,11 +8,41 @@
             <Image Height="240" HorizontalAlignment="Left" Margin="355,20,0,0" Name="image2" Stretch="Fill" VerticalAlignment="Top" Width="320" />
             <TextBox Name="position" Width="200" Height="30" VerticalAlignment="Bottom" />
         </Grid>
-        <Canvas Name="MainCanvas" Height="640" Width="480">
+        <Canvas Name="MainCanvas" Height="200" Width="200">
             <Ellipse Canvas.Left="0" Canvas.Top="0" Height="50" Name="headEllipse" Stroke="Black" Width="50" Fill="Orange" />
             <Ellipse Canvas.Left="50" Canvas.Top="0" Height="50" Name="rightEllipse" Stroke="Black" Width="50" Fill="SlateGray" />
             <Ellipse Canvas.Left="100" Canvas.Top="0" Fill="SpringGreen" Height="50" Name="leftEllipse" Stroke="Black" Width="50" />
         </Canvas>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="TopDown"></TextBlock>
+            <Canvas Name="TopDown" Width="300" Height="200">
+                <Line X1="130" X2="20" Y1="100" Y2="100" StrokeThickness="4" Stroke="Black" Name="LeftArmTopDown">
+                </Line>
+                <Ellipse Height="50" Width="50" Canvas.Left="130" Canvas.Top="75" Stroke="Black"></Ellipse>
+                <Line X1="180" X2="280" Y1="100" Y2="100" StrokeThickness="4" Stroke="Black" Name="RightArmTopDown">
+                </Line>
+            </Canvas>
+            <TextBlock Text="Front"></TextBlock>
+            <Canvas Name="Front" Width="300" Height="200">
+                <Line X1="130" X2="20" Y1="100" Y2="100" StrokeThickness="4" Stroke="Black" Name="LeftArmFront">
+                </Line>
+                <Ellipse Height="50" Width="50" Canvas.Left="130" Canvas.Top="75" Stroke="Black"></Ellipse>
+                <Line X1="180" X2="280" Y1="100" Y2="100" StrokeThickness="4" Stroke="Black" Name="RightArmFront">
+                </Line>
+            </Canvas>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+        <TextBlock Text="LeftArm"></TextBlock>
+        <Canvas Width="300" Height="200">
+            <Line X1="130" X2="20" Y1="100" Y2="100" StrokeThickness="4" Stroke="Black" Name="LeftArm">
+            </Line>
+        </Canvas>
+        <TextBlock Text="RightArm"></TextBlock>
+        <Canvas Width="300" Height="200">
+            <Line X1="180" X2="280" Y1="100" Y2="100" StrokeThickness="4" Stroke="Black" Name="RightArm">
+            </Line>
+        </Canvas>
+        </StackPanel>
     </StackPanel>
     
 </Window>
