@@ -88,6 +88,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NaoElbow.cs" />
+    <Compile Include="NaoHand.cs" />
+    <Compile Include="NaoShoulder.cs" />
+    <Compile Include="NaoSkeleton.cs" />
     <Compile Include="HeadPanning.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -95,6 +99,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NaoWrist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
