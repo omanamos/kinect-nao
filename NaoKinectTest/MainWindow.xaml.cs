@@ -101,6 +101,8 @@ namespace NaoKinectTest
                 SetLineAngle(LeftArmTopDown, hs.LeftShoulderYaw);
                 SetLineAngle(RightArmFront, -hs.RightShoulderPitch + 90);
                 SetLineAngle(LeftArmFront, hs.LeftShoulderPitch - 90);
+                SetLineAngle(RightArm, -hs.RightShoulderRoll + 90);
+                SetLineAngle(LeftArm, hs.LeftShoulderRoll - 90);
             }
         }
 

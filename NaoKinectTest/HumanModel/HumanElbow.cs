@@ -23,7 +23,16 @@ namespace NaoKinectTest.HumanModel
 
         private void compute(Joint shoulder, Joint elbow, Joint wrist)
         {
-            // TODO: fill this in
+            Vector3D shoulderVec = Util.vectorFromJoint(shoulder);
+            Vector3D elbowVec = Util.vectorFromJoint(elbow);
+            Vector3D wristVec = Util.vectorFromJoint(wrist);
+
+            Vector3D elbowToShoulder = shoulderVec - elbowVec;
+            Vector3D elbowToWrist = shoulderVec - wristVec;
+
+            Yaw = Vector3D.AngleBetween(elbowToWrist, elbowToShoulder);
         }
+
+        public double Yaw { get; set; }
     }
 }
