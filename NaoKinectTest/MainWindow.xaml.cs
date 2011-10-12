@@ -7,6 +7,7 @@ using System.Windows.Shapes;
 using Aldebaran.NaoCamCSharpExample;
 using Coding4Fun.Kinect.Wpf;
 using Microsoft.Research.Kinect.Nui;
+using NaoKinectTest.HumanModel;
 
 namespace NaoKinectTest
 {

@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NaoKinectTest.HumanModel;
 
 namespace NaoKinectTest
 {
     class NaoElbow
     {
-        public static sealed double YAW_MIN = -2.0857;
-        public static sealed double YAW_MAX = 2.0857;
-        public static sealed double YAW_RANGE = YAW_MAX - YAW_MIN;
+        public static readonly double YAW_MIN = -2.0857;
+        public static readonly double YAW_MAX = 2.0857;
+        public static readonly double YAW_RANGE = YAW_MAX - YAW_MIN;
 
-        public static sealed double ROLL_MIN = -1.3265;
-        public static sealed double ROLL_MAX = 0.3142;
-        public static sealed double ROLL_RANGE = ROLL_MAX - ROLL_MIN;
+        public static readonly double ROLL_MIN = -1.3265;
+        public static readonly double ROLL_MAX = 0.3142;
+        public static readonly double ROLL_RANGE = ROLL_MAX - ROLL_MIN;
 
         private double yaw;
         private double roll;

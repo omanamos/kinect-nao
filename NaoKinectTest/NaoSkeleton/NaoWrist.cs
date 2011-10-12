@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NaoKinectTest.HumanModel;
 
 namespace NaoKinectTest
 {
     class NaoWrist
     {
-        public static sealed double YAW_MIN = -1.8238;
-        public static sealed double YAW_MAX = 1.8238;
-        public static sealed double YAW_RANGE = YAW_MAX - YAW_MIN;
+        public static readonly double YAW_MIN = -1.8238;
+        public static readonly double YAW_MAX = 1.8238;
+        public static readonly double YAW_RANGE = YAW_MAX - YAW_MIN;
 
         private double yaw;
 

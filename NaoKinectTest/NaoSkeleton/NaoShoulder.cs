@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NaoKinectTest.HumanModel;
 
 namespace NaoKinectTest
 {
     class NaoShoulder
     {
-        public static sealed double PITCH_MIN = -2.0857;
-        public static sealed double PITCH_MAX = 2.0857;
-        public static sealed double PITCH_RANGE = PITCH_MAX - PITCH_MIN;
+        public static readonly double PITCH_MIN = -2.0857;
+        public static readonly double PITCH_MAX = 2.0857;
+        public static readonly double PITCH_RANGE = PITCH_MAX - PITCH_MIN;
 
-        public static sealed double ROLL_MIN = -1.3265;
-        public static sealed double ROLL_MAX = 0.3142;
-        public static sealed double ROLL_RANGE = ROLL_MAX - ROLL_MIN;
+        public static readonly double ROLL_MIN = -1.3265;
+        public static readonly double ROLL_MAX = 0.3142;
+        public static readonly double ROLL_RANGE = ROLL_MAX - ROLL_MIN;
 
         private double pitch;
         private double roll;

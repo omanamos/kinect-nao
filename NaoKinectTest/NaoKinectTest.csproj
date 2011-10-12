@@ -94,19 +94,22 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="NaoElbow.cs" />
-    <Compile Include="NaoHand.cs" />
-    <Compile Include="NaoShoulder.cs" />
-    <Compile Include="NaoSkeleton.cs" />
+    <Compile Include="HumanModel\HumanElbow.cs" />
+    <Compile Include="HumanModel\HumanShoulder.cs" />
+    <Compile Include="HumanModel\Util.cs" />
+    <Compile Include="NaoSkeleton\NaoElbow.cs" />
+    <Compile Include="NaoSkeleton\NaoHand.cs" />
+    <Compile Include="NaoSkeleton\NaoShoulder.cs" />
+    <Compile Include="NaoSkeleton\NaoSkeleton.cs" />
     <Compile Include="HeadPanning.cs" />
-    <Compile Include="HumanSkeleton.cs" />
+    <Compile Include="HumanModel\HumanSkeleton.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NaoWrist.cs" />
+    <Compile Include="NaoSkeleton\NaoWrist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
