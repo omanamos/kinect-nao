@@ -19,22 +19,15 @@ namespace NaoKinectTest
         private double pitch;
         private double roll;
 
+        public double Pitch { get; private set; }
+        public double Roll { get; private set; }
+
         private NaoShoulder(){}
 
         public NaoShoulder(double humanPitch, double humanRoll)
         {
-            this.pitch = scalePitch(humanPitch);
-            this.roll = scaleRoll(humanRoll);
-        }
-
-        public double getPitch()
-        {
-            return this.pitch;
-        }
-
-        public double getRoll()
-        {
-            return this.roll;
+            Pitch = scalePitch(humanPitch);
+            Roll = scaleRoll(humanRoll);
         }
 
         private double scalePitch(double humanPitch)

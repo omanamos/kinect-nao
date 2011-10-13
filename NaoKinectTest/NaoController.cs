@@ -10,7 +10,7 @@ namespace NaoKinectTest
 {
     class NaoController
     {
-        private static sealed float SPEED = 0.1f;
+        private static readonly float SPEED = 0.1f;
 
         private MotionProxy proxy;
         private NaoSkeleton lastUpdate;
@@ -25,24 +25,24 @@ namespace NaoKinectTest
         public void update(NaoSkeleton skeleton)
         {
             //Shoulder Angles
-            proxy.setAngles("LShoulderPitch", skeleton.getLeftShoulder().getPitch(), SPEED);
-            proxy.setAngles("RShoulderPitch", skeleton.getRightShoulder().getPitch(), SPEED);
-            proxy.setAngles("LShoulderRoll", skeleton.getLeftShoulder().getRoll(), SPEED);
-            proxy.setAngles("RShoulderRoll", skeleton.getRightShoulder().getRoll(), SPEED);
+            proxy.setAngles("LShoulderPitch", skeleton.LeftShoulder.Pitch, SPEED);
+            proxy.setAngles("RShoulderPitch", skeleton.RightShoulder.Pitch, SPEED);
+            proxy.setAngles("LShoulderRoll", skeleton.LeftShoulder.Roll, SPEED);
+            proxy.setAngles("RShoulderRoll", skeleton.RightShoulder.Roll, SPEED);
 
             //Elbow Angles
-            proxy.setAngles("LElbowYaw", skeleton.getLeftElbow().getYaw(), SPEED);
-            proxy.setAngles("RElbowYaw", skeleton.getRightElbow().getYaw(), SPEED);
-            proxy.setAngles("LElbowRoll", skeleton.getLeftElbow().getRoll(), SPEED);
-            proxy.setAngles("RElbowRoll", skeleton.getRightElbow().getRoll(), SPEED);
+            proxy.setAngles("LElbowYaw", skeleton.LeftElbow.getYaw(), SPEED);
+            proxy.setAngles("RElbowYaw", skeleton.RightElbow.getYaw(), SPEED);
+            proxy.setAngles("LElbowRoll", skeleton.LeftElbow.getRoll(), SPEED);
+            proxy.setAngles("RElbowRoll", skeleton.RightElbow.getRoll(), SPEED);
 
             //Wrist Angles
-            proxy.setAngles("LWristYaw", skeleton.getLeftWrist().getYaw(), SPEED);
-            proxy.setAngles("RWristYaw", skeleton.getRightWrist().getYaw(), SPEED);
+            proxy.setAngles("LWristYaw", skeleton.LeftWrist.getYaw(), SPEED);
+            proxy.setAngles("RWristYaw", skeleton.RightWrist.getYaw(), SPEED);
 
             //Hand Angles
-            proxy.setAngles("LHand", skeleton.getLeftHand().isOpen(), SPEED);
-            proxy.setAngles("RHand", skeleton.getRightHand().isOpen(), SPEED);
+            proxy.setAngles("LHand", skeleton.LeftHand.isOpen(), SPEED);
+            proxy.setAngles("RHand", skeleton.RightHand.isOpen(), SPEED);
         }
     }
 }
