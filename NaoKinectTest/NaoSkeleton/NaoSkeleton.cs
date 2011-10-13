@@ -21,7 +21,17 @@ namespace NaoKinectTest
 
         public NaoSkeleton(HumanSkeleton skeleton)
         {
-            
+            this.LeftShoulder = new NaoShoulder(skeleton.LeftShoulderPitch, skeleton.LeftShoulderRoll);
+            this.RightShoulder = new NaoShoulder(skeleton.RightShoulderPitch, skeleton.RightShoulderRoll);
+
+            this.LeftWrist = new NaoWrist(0.0);
+            this.RightWrist = new NaoWrist(0.0);
+
+            this.LeftElbow = new NaoElbow(skeleton.LeftShoulderYaw, skeleton.LeftElbowRoll);
+            this.RightElbow = new NaoElbow(skeleton.RightShoulderYaw, skeleton.RightElbowRoll);
+
+            this.LeftHand = new NaoHand(true);
+            this.RightHand = new NaoHand(true);
         }
     }
 }
