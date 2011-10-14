@@ -30,7 +30,7 @@ namespace NaoKinectTest.HumanModel
             leftShoulder = new HumanShoulder(shoulderCenter, spine, 
                 kinectJoints[JointID.ShoulderLeft], 
                 kinectJoints[JointID.ElbowLeft],
-                kinectJoints[JointID.WristLeft]);
+                kinectJoints[JointID.WristLeft], true);
 
             LeftShoulderPitch = leftShoulder.Pitch;
             LeftShoulderYaw = leftShoulder.Yaw;
@@ -39,7 +39,7 @@ namespace NaoKinectTest.HumanModel
             rightShoulder = new HumanShoulder(shoulderCenter, spine,
                 kinectJoints[JointID.ShoulderRight],
                 kinectJoints[JointID.ElbowRight],
-                kinectJoints[JointID.WristRight]);
+                kinectJoints[JointID.WristRight], false);
 
             RightShoulderPitch = rightShoulder.Pitch;
             RightShoulderYaw = rightShoulder.Yaw;

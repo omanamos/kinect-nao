@@ -17,7 +17,7 @@ namespace NaoKinectTest
     public partial class MainWindow : Window
     {
         Runtime nui = new Runtime();
-        private NaoController controller = new NaoController("127.0.0.1");
+        private NaoController controller = new NaoController("128.208.4.10");
         private SkeletonData _skel;
 
         public MainWindow()
@@ -97,8 +97,11 @@ namespace NaoKinectTest
 
         private void UpdateTextBoxes(NaoSkeleton ns, HumanSkeleton hs)
         {
-            NaoElbowRoll.Text = "Left: " + ns.LeftElbow.getRoll() + "(Nao) - " + hs.LeftElbowYaw + "(Human) || Right: " + ns.RightElbow.getRoll() + "(Nao) - " + hs.RightElbowYaw + "(Human)";
-            NaoElbowYaw.Text = "Left: " + ns.LeftElbow.getYaw() + "(Nao) - " + hs.LeftShoulderRoll + "(Human) || Right: " + ns.RightElbow.getYaw() + "(Nao) - " + hs.RightShoulderRoll + "(Human)";
+            NaoElbowRoll.Text = "Left: " + ns.LeftElbow.getRoll() + "(NaoRoll) - " + hs.LeftElbowYaw + "(HumanYaw) || Right: " + ns.RightElbow.getRoll() + "(NaoRoll) - " + hs.RightElbowYaw + "(HumanYaw)";
+            NaoElbowYaw.Text = "Left: " + ns.LeftElbow.getYaw() + "(NaoYaw) - " + hs.LeftShoulderRoll + "(HumanRoll) || Right: " + ns.RightElbow.getYaw() + "(NaoYaw) - " + hs.RightShoulderRoll + "(HumanRoll)";
+
+            NaoShoulderRoll.Text = "Left: " + ns.LeftShoulder.Roll + "(NaoRoll) - " + hs.LeftShoulderPitch + "(HumanPitch) || Right: " + ns.RightShoulder.Roll + "(NaoRoll) - " + hs.RightShoulderPitch + "(HumanPitch)";
+            NaoShoulderPitch.Text = "Left: " + ns.LeftShoulder.Pitch + "(NaoPitch) - " + hs.LeftShoulderYaw + "(HumanYaw) || Right: " + ns.RightShoulder.Pitch + "(NaoPitch) - " + hs.RightShoulderYaw + "(HumanYaw)";
         }
 
         private void SetLineAngle(Line line, double p)
