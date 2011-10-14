@@ -10,8 +10,8 @@ namespace NaoKinectTest.HumanModel
     class HumanElbow
     {
         // TODO: Change these values
-        public static readonly double YAW_MIN = -2.0857;
-        public static readonly double YAW_MAX = 2.0857;
+        public static readonly double YAW_MIN = 0.4;
+        public static readonly double YAW_MAX = 3.14;
         public static readonly double YAW_RANGE = YAW_MAX - YAW_MIN;
 
         private double yaw;
@@ -28,9 +28,9 @@ namespace NaoKinectTest.HumanModel
             Vector3D wristVec = Util.vectorFromJoint(wrist);
 
             Vector3D elbowToShoulder = shoulderVec - elbowVec;
-            Vector3D elbowToWrist = shoulderVec - wristVec;
+            Vector3D elbowToWrist = wristVec - elbowVec;
 
-            Yaw = Vector3D.AngleBetween(elbowToWrist, elbowToShoulder);
+            Yaw = Util.degToRad(Vector3D.AngleBetween(elbowToWrist, elbowToShoulder));
         }
 
         public double Yaw { get; set; }

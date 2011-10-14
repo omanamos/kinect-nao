@@ -43,6 +43,11 @@
             </Line>
         </Canvas>
         </StackPanel>
+        
+        <TextBlock Text="Elbow Yaw" Height="23" Width="100" />
+        <TextBox Name="NaoElbowYaw" Width="700" Height="26" />
+        <TextBlock Text="Elbow Roll" Height="23" Width="100" />
+        <TextBox Name="NaoElbowRoll" Width="700" Height="21" />
     </StackPanel>
     
 </Window>

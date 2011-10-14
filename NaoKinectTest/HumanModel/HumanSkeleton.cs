@@ -50,14 +50,14 @@ namespace NaoKinectTest.HumanModel
                 kinectJoints[JointID.ElbowLeft], 
                 kinectJoints[JointID.WristLeft]);
 
-            LeftElbowRoll = leftElbow.Yaw;
+            LeftElbowYaw = leftElbow.Yaw;
 
             rightElbow = new HumanElbow(
                 kinectJoints[JointID.ShoulderRight],
                 kinectJoints[JointID.ElbowRight],
                 kinectJoints[JointID.WristRight]);
 
-            RightElbowRoll = rightElbow.Yaw;
+            RightElbowYaw = rightElbow.Yaw;
         }
 
         private JointID getJointIdForSide(sides side, side_joints joint)
@@ -110,8 +110,8 @@ namespace NaoKinectTest.HumanModel
 
         public double LeftShoulderRoll { get; set; }
 
-        public double LeftElbowRoll { get; set; }
+        public double RightElbowYaw { get; set; }
 
-        public double RightElbowRoll { get; set; }
+        public double LeftElbowYaw { get; set; }
     }
 }

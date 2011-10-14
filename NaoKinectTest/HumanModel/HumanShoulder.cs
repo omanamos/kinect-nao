@@ -10,18 +10,18 @@ namespace NaoKinectTest.HumanModel
     class HumanShoulder
     {
         // TODO: Change these values
-        public static readonly double PITCH_MIN = -2.0857;
-        public static readonly double PITCH_MAX = 2.0857;
+        public static readonly double PITCH_MIN = 0.0;
+        public static readonly double PITCH_MAX = 3.14;
         public static readonly double PITCH_RANGE = PITCH_MAX - PITCH_MIN;
 
         // TODO: Change these values
-        public static readonly double YAW_MIN = -2.0857;
-        public static readonly double YAW_MAX = 2.0857;
+        public static readonly double YAW_MIN = -3.14;
+        public static readonly double YAW_MAX = 3.14;
         public static readonly double YAW_RANGE = YAW_MAX - YAW_MIN;
 
         // TODO: Change these values
-        public static readonly double ROLL_MIN = -1.3265;
-        public static readonly double ROLL_MAX = 0.3142;
+        public static readonly double ROLL_MIN = 0;
+        public static readonly double ROLL_MAX = 2.7;
         public static readonly double ROLL_RANGE = ROLL_MAX - ROLL_MIN;
 
         public HumanShoulder(Joint shoulderCenter, Joint spine, Joint shoulder, Joint elbow, Joint wrist)
@@ -80,9 +80,9 @@ namespace NaoKinectTest.HumanModel
 
             double shoulderRoll = Vector3D.AngleBetween(rollVector, upInShoulderFrame);
             
-            Pitch = shoulderPitch;
-            Yaw = shoulderYaw;
-            Roll = shoulderRoll;
+            Pitch = Util.degToRad(shoulderPitch);
+            Yaw = Util.degToRad(shoulderYaw);
+            Roll = Util.degToRad(shoulderRoll);
         }
 
         public double Yaw { get; set; }
