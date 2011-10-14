@@ -20,8 +20,8 @@ namespace NaoKinectTest.HumanModel
         public static readonly double YAW_RANGE = YAW_MAX - YAW_MIN;
 
         // TODO: Change these values
-        public static readonly double ROLL_MIN = 0;
-        public static readonly double ROLL_MAX = 2.7;
+        public static readonly double ROLL_MIN = 0.2;
+        public static readonly double ROLL_MAX = 2.4;
         public static readonly double ROLL_RANGE = ROLL_MAX - ROLL_MIN;
 
         public HumanShoulder(Joint shoulderCenter, Joint spine, Joint shoulder, Joint elbow, Joint wrist)

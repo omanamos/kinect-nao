@@ -43,7 +43,7 @@ namespace NaoKinectTest
 
         public double scaleRoll(double humanRoll)
         {
-            return Util.clamp(((-humanRoll - HumanShoulder.ROLL_MIN) / HumanShoulder.ROLL_RANGE) * ROLL_RANGE + ROLL_MIN, ROLL_MIN, ROLL_MAX);
+            return Util.clamp(((humanRoll - HumanShoulder.ROLL_MIN) / HumanShoulder.ROLL_RANGE) * ROLL_RANGE + ROLL_MIN, ROLL_MIN, ROLL_MAX);
         }
     }
 }

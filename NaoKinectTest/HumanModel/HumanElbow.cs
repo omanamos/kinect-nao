@@ -10,7 +10,7 @@ namespace NaoKinectTest.HumanModel
     class HumanElbow
     {
         // TODO: Change these values
-        public static readonly double YAW_MIN = 0.4;
+        public static readonly double YAW_MIN = 0.8;
         public static readonly double YAW_MAX = 3.14;
         public static readonly double YAW_RANGE = YAW_MAX - YAW_MIN;
 
