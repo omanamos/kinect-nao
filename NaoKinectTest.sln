@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NaoKinectCV", "NaoKinectCV\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICPHeadFitter", "Z:\WindowsFolders\MyDocs\Capstone\NaoKinectTest\ICPHeadFitter\ICPHeadFitter.csproj", "{4662D640-2A9C-4491-8D5B-AA76A20F4A9F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotionRecorder", "MotionRecorder\MotionRecorder.csproj", "{49C865EF-4D30-4E20-96C6-3AE8FDB3E232}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visualizer", "Visualizer\Visualizer\Visualizer.csproj", "{ED68EE2E-5085-4DE8-8908-67A63AB50D64}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "VisualizerContent", "Visualizer\VisualizerContent\VisualizerContent.contentproj", "{A3C57D14-E728-40D8-89A4-5B9561584CA6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +53,32 @@ Global
 		{4662D640-2A9C-4491-8D5B-AA76A20F4A9F}.Release|Mixed Platforms.Build.0 = Release|x86
 		{4662D640-2A9C-4491-8D5B-AA76A20F4A9F}.Release|x86.ActiveCfg = Release|x86
 		{4662D640-2A9C-4491-8D5B-AA76A20F4A9F}.Release|x86.Build.0 = Release|x86
+		{49C865EF-4D30-4E20-96C6-3AE8FDB3E232}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{49C865EF-4D30-4E20-96C6-3AE8FDB3E232}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{49C865EF-4D30-4E20-96C6-3AE8FDB3E232}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{49C865EF-4D30-4E20-96C6-3AE8FDB3E232}.Debug|x86.ActiveCfg = Debug|x86
+		{49C865EF-4D30-4E20-96C6-3AE8FDB3E232}.Debug|x86.Build.0 = Debug|x86
+		{49C865EF-4D30-4E20-96C6-3AE8FDB3E232}.Release|Any CPU.ActiveCfg = Release|x86
+		{49C865EF-4D30-4E20-96C6-3AE8FDB3E232}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{49C865EF-4D30-4E20-96C6-3AE8FDB3E232}.Release|Mixed Platforms.Build.0 = Release|x86
+		{49C865EF-4D30-4E20-96C6-3AE8FDB3E232}.Release|x86.ActiveCfg = Release|x86
+		{49C865EF-4D30-4E20-96C6-3AE8FDB3E232}.Release|x86.Build.0 = Release|x86
+		{ED68EE2E-5085-4DE8-8908-67A63AB50D64}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{ED68EE2E-5085-4DE8-8908-67A63AB50D64}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{ED68EE2E-5085-4DE8-8908-67A63AB50D64}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{ED68EE2E-5085-4DE8-8908-67A63AB50D64}.Debug|x86.ActiveCfg = Debug|x86
+		{ED68EE2E-5085-4DE8-8908-67A63AB50D64}.Debug|x86.Build.0 = Debug|x86
+		{ED68EE2E-5085-4DE8-8908-67A63AB50D64}.Release|Any CPU.ActiveCfg = Release|x86
+		{ED68EE2E-5085-4DE8-8908-67A63AB50D64}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{ED68EE2E-5085-4DE8-8908-67A63AB50D64}.Release|Mixed Platforms.Build.0 = Release|x86
+		{ED68EE2E-5085-4DE8-8908-67A63AB50D64}.Release|x86.ActiveCfg = Release|x86
+		{ED68EE2E-5085-4DE8-8908-67A63AB50D64}.Release|x86.Build.0 = Release|x86
+		{A3C57D14-E728-40D8-89A4-5B9561584CA6}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{A3C57D14-E728-40D8-89A4-5B9561584CA6}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{A3C57D14-E728-40D8-89A4-5B9561584CA6}.Debug|x86.ActiveCfg = Debug|x86
+		{A3C57D14-E728-40D8-89A4-5B9561584CA6}.Release|Any CPU.ActiveCfg = Release|x86
+		{A3C57D14-E728-40D8-89A4-5B9561584CA6}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{A3C57D14-E728-40D8-89A4-5B9561584CA6}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

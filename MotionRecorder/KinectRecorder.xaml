@@ -1,0 +1,47 @@
+﻿<Window x:Class="MotionRecorder.KinectRecorder"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="KinectRecorder" Height="450" Width="525" Loaded="Window_Loaded" Closed="Window_Closed">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="Recordings Path" />
+            <TextBox Grid.Column="1" Name="recordings_path" Text="Z:\WindowsFolders\MyDocs\Capstone\NaoKinectTest\MotionRecorder"/>
+            <Button Grid.Column="2" Click="directoryButton_Click" Content="Browse"/>
+        </Grid>
+        <ToggleButton Grid.Row="1" Name="record" Content="Record" Checked="record_Checked" Unchecked="record_Unchecked" />
+        <TextBox Grid.Row="1" Grid.Column="1" Name="recording_title" Text="Enter Action" Margin="0,0,289,0" />
+        <TextBox Grid.Row="1" Grid.Column="1" Name="recording_rep" Text="Enter Rep" Margin="202,0,87,0" />
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="2">
+            <Label Content="Previous Recordings" />
+            <ListView Name="recordings" MinHeight="100" SelectionChanged="recordings_SelectionChanged" />
+            <Label Content="Begin" />
+            <Slider Name="start_slider" IsEnabled="False"></Slider>
+            <Label Content="End" />
+            <Slider Name="end_slider"  IsEnabled="False" Value="100"></Slider>
+            <Label Content="Playback" />
+            <StackPanel Orientation="Horizontal">
+                <Button Name="play" Content="Play" Click="play_Click"
+                        ToolTipService.ShowOnDisabled="True"
+                        ToolTip="Select a recording path to enable"></Button>
+                <Slider Name="play_slider" MinWidth="450" IsEnabled="False"></Slider>
+            </StackPanel>
+            <Button Content="Save" Name="save_btn" Click="save_btn_Click" Width="80"></Button>
+            <CheckBox Content="Show Live Kinect Output" Name="kinect_vis_enabled" Unchecked="kinect_vis_enabled_Unchecked" Checked="kinect_vis_enabled_Checked"></CheckBox>
+        </StackPanel>
+        
+    </Grid>
+</Window>
