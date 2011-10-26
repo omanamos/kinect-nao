@@ -30,7 +30,7 @@ namespace NaoKinectTest.HumanModel
             leftShoulder = new HumanShoulder(shoulderCenter, spine, 
                 kinectJoints[JointID.ShoulderLeft], 
                 kinectJoints[JointID.ElbowLeft],
-                kinectJoints[JointID.WristLeft]);
+                kinectJoints[JointID.WristLeft], true);
 
             LeftShoulderPitch = leftShoulder.Pitch;
             LeftShoulderYaw = leftShoulder.Yaw;
@@ -39,7 +39,7 @@ namespace NaoKinectTest.HumanModel
             rightShoulder = new HumanShoulder(shoulderCenter, spine,
                 kinectJoints[JointID.ShoulderRight],
                 kinectJoints[JointID.ElbowRight],
-                kinectJoints[JointID.WristRight]);
+                kinectJoints[JointID.WristRight], false);
 
             RightShoulderPitch = rightShoulder.Pitch;
             RightShoulderYaw = rightShoulder.Yaw;
@@ -50,10 +50,14 @@ namespace NaoKinectTest.HumanModel
                 kinectJoints[JointID.ElbowLeft], 
                 kinectJoints[JointID.WristLeft]);
 
+            LeftElbowYaw = leftElbow.Yaw;
+
             rightElbow = new HumanElbow(
                 kinectJoints[JointID.ShoulderRight],
                 kinectJoints[JointID.ElbowRight],
                 kinectJoints[JointID.WristRight]);
+
+            RightElbowYaw = rightElbow.Yaw;
         }
 
         private JointID getJointIdForSide(sides side, side_joints joint)
@@ -105,5 +109,9 @@ namespace NaoKinectTest.HumanModel
         public double RightShoulderRoll { get; set; }
 
         public double LeftShoulderRoll { get; set; }
+
+        public double RightElbowYaw { get; set; }
+
+        public double LeftElbowYaw { get; set; }
     }
 }

@@ -11,9 +11,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotionRecorder", "MotionRec
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visualizer", "Visualizer\Visualizer\Visualizer.csproj", "{ED68EE2E-5085-4DE8-8908-67A63AB50D64}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "VisualizerContent", "Visualizer\VisualizerContent\VisualizerContent.contentproj", "{A3C57D14-E728-40D8-89A4-5B9561584CA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualizerContent", "Visualizer\VisualizerContent\VisualizerContent.contentproj", "{A3C57D14-E728-40D8-89A4-5B9561584CA6}"
 EndProject
 Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = NaoKinectTest.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms

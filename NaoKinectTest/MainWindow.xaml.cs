@@ -17,10 +17,9 @@ namespace NaoKinectTest
     public partial class MainWindow : Window
     {
         Runtime nui = new Runtime();
-        private HeadPanning _headPanning = new HeadPanning();
+        private NaoController controller = new NaoController("128.208.4.10");
         private SkeletonData _skel;
-        private int depthHeight;
-        private int depthWidth;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -52,9 +51,6 @@ namespace NaoKinectTest
             nui.VideoStream.Open(ImageStreamType.Video, 2, ImageResolution.Resolution640x480, ImageType.Color);
             nui.DepthStream.Open(ImageStreamType.Depth, 2, ImageResolution.Resolution320x240, ImageType.Depth);
             nui.NuiCamera.ElevationAngle = 8;
-            depthHeight = nui.DepthStream.Height;
-            depthWidth = nui.DepthStream.Width;
-            //_headPanning.Connect("127.0.0.1");
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -85,39 +81,33 @@ namespace NaoKinectTest
             {
                 this._skel = skeleton;
                 Joint head = skeleton.Joints[JointID.Head];
-
-                //SetEllipsePosition(headEllipse, skeleton.Joints[JointID.Head]);
-                //SetEllipsePosition(leftEllipse, skeleton.Joints[JointID.HandLeft]);
-                //SetEllipsePosition(rightEllipse, skeleton.Joints[JointID.HandRight]);
-                head = head.ScaleTo(200, 200);
-                position.Text = "(" + head.Position.X + ", " + head.Position.Y + ", " + head.Position.Z + ")";
-                Console.WriteLine("(" + (head.Position.X - 100) + ", " + (head.Position.Y - 100) + ", " + (head.Position.Z - 100) + ")");
-                _headPanning.UpdatePitch(100 - (int)head.Position.Y);
-                _headPanning.UpdateYaw(100 - (int)head.Position.X);
-                
                 HumanSkeleton hs = new HumanSkeleton(skeleton.Joints);
+                NaoSkeleton ns = new NaoSkeleton(hs);
+                UpdateTextBoxes(ns, hs);
+                controller.update(ns);
 
-                SetLineAngle(RightArmTopDown, hs.RightShoulderYaw);
-                SetLineAngle(LeftArmTopDown, hs.LeftShoulderYaw);
-                SetLineAngle(RightArmFront, -hs.RightShoulderPitch + 90);
-                SetLineAngle(LeftArmFront, hs.LeftShoulderPitch - 90);
-                SetLineAngle(RightArm, -hs.RightShoulderRoll + 90);
-                SetLineAngle(LeftArm, hs.LeftShoulderRoll - 90);
+                SetLineAngle(RightArmTopDown, Util.radToDeg(hs.RightShoulderYaw));
+                SetLineAngle(LeftArmTopDown, Util.radToDeg(hs.LeftShoulderYaw));
+                SetLineAngle(RightArmFront, Util.radToDeg(-hs.RightShoulderPitch) + 90);
+                SetLineAngle(LeftArmFront, Util.radToDeg(hs.LeftShoulderPitch) - 90);
+                SetLineAngle(RightArm, Util.radToDeg(-hs.RightShoulderRoll) + 90);
+                SetLineAngle(LeftArm, Util.radToDeg(hs.LeftShoulderRoll) - 90);
             }
+        }
+
+        private void UpdateTextBoxes(NaoSkeleton ns, HumanSkeleton hs)
+        {
+            NaoElbowRoll.Text = "Left: " + ns.LeftElbow.getRoll() + "(NaoRoll) - " + hs.LeftElbowYaw + "(HumanYaw) || Right: " + ns.RightElbow.getRoll() + "(NaoRoll) - " + hs.RightElbowYaw + "(HumanYaw)";
+            NaoElbowYaw.Text = "Left: " + ns.LeftElbow.getYaw() + "(NaoYaw) - " + hs.LeftShoulderRoll + "(HumanRoll) || Right: " + ns.RightElbow.getYaw() + "(NaoYaw) - " + hs.RightShoulderRoll + "(HumanRoll)";
+
+            NaoShoulderRoll.Text = "Left: " + ns.LeftShoulder.Roll + "(NaoRoll) - " + hs.LeftShoulderPitch + "(HumanPitch) || Right: " + ns.RightShoulder.Roll + "(NaoRoll) - " + hs.RightShoulderPitch + "(HumanPitch)";
+            NaoShoulderPitch.Text = "Left: " + ns.LeftShoulder.Pitch + "(NaoPitch) - " + hs.LeftShoulderYaw + "(HumanYaw) || Right: " + ns.RightShoulder.Pitch + "(NaoPitch) - " + hs.RightShoulderYaw + "(HumanYaw)";
         }
 
         private void SetLineAngle(Line line, double p)
         {
             RotateTransform rot = new RotateTransform(p, line.X1, line.Y1);
             line.RenderTransform = rot;
-        }
-
-        private void SetEllipsePosition(FrameworkElement ellipse, Joint joint)
-        {
-            var scaledJoint = joint.ScaleTo(640, 480, .5f, .5f);
-
-            Canvas.SetLeft(ellipse, scaledJoint.Position.X);
-            Canvas.SetTop(ellipse, scaledJoint.Position.Y);
         }
     }
 }

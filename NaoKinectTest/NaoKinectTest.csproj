@@ -96,7 +96,7 @@
     </Compile>
     <Compile Include="HumanModel\HumanElbow.cs" />
     <Compile Include="HumanModel\HumanShoulder.cs" />
-    <Compile Include="HumanModel\Util.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="NaoController.cs" />
     <Compile Include="NaoSkeleton\NaoElbow.cs" />
     <Compile Include="NaoSkeleton\NaoHand.cs" />

@@ -5,9 +5,9 @@ using System.Text;
 using System.Windows.Media.Media3D;
 using Microsoft.Research.Kinect.Nui;
 
-namespace NaoKinectTest.HumanModel
+namespace NaoKinectTest
 {
-    class Util
+    public class Util
     {
         public static Vector3D projectToPlane(Vector3D planeNormal, Vector3D v)
         {
@@ -30,6 +30,21 @@ namespace NaoKinectTest.HumanModel
             v.Y = j.Position.Y;
             v.Z = j.Position.Z;
             return v;
+        }
+
+        public static double degToRad(double deg)
+        {
+            return deg * Math.PI / 180;
+        }
+
+        public static double radToDeg(double rad)
+        {
+            return rad * 180 / Math.PI;
+        }
+
+        public static double clamp(double val, double min, double max)
+        {
+            return Math.Min(max, Math.Max(min, val));
         }
     }
 }

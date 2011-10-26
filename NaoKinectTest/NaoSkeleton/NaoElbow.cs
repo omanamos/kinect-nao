@@ -8,22 +8,39 @@ namespace NaoKinectTest
 {
     class NaoElbow
     {
-        public static readonly double YAW_MIN = -2.0857;
-        public static readonly double YAW_MAX = 2.0857;
-        public static readonly double YAW_RANGE = YAW_MAX - YAW_MIN;
+        public double YAW_MIN = -2.0856;
+        public double YAW_MAX = 2.0856;
+        public double YAW_RANGE;
 
-        public static readonly double ROLL_MIN = -1.3265;
-        public static readonly double ROLL_MAX = 0.3142;
-        public static readonly double ROLL_RANGE = ROLL_MAX - ROLL_MIN;
+        public double ROLL_MIN = 0.0349;
+        public double ROLL_MAX = 1.5446;
+        public double ROLL_RANGE;
 
         private double yaw;
         private double roll;
+        private bool leftSide;
 
         private NaoElbow(){}
 
-        public NaoElbow(double humanYaw, double humanRoll)
+        public NaoElbow(double humanYaw, double humanRoll, bool leftSide)
         {
-            this.yaw = scalePitch(humanYaw);
+            this.leftSide = leftSide;
+            if (leftSide)
+            {
+                double tmp = ROLL_MIN;
+                ROLL_MIN = -ROLL_MAX;
+                ROLL_MAX = -tmp;
+            }
+            else
+            {
+                humanRoll = Math.Abs(humanRoll - Math.PI);
+                double tmp = YAW_MIN;
+                YAW_MIN = -YAW_MAX;
+                YAW_MAX = -tmp;
+            }
+            YAW_RANGE = YAW_MAX - YAW_MIN;
+            ROLL_RANGE = ROLL_MAX - ROLL_MIN;
+            this.yaw = scaleYaw(humanYaw);
             this.roll = scaleRoll(humanRoll);
         }
 
@@ -37,14 +54,15 @@ namespace NaoKinectTest
             return this.roll;
         }
 
-        private double scalePitch(double humanPitch)
+        private double scaleYaw(double humanYaw)
         {
-            return (humanPitch - HumanElbow.YAW_MIN / HumanElbow.YAW_RANGE) * YAW_RANGE;
+            double rtn = Util.clamp(((humanYaw - HumanShoulder.ROLL_MIN) / HumanShoulder.ROLL_RANGE) * YAW_RANGE + YAW_MIN, YAW_MIN, YAW_MAX);
+            return leftSide ? rtn : -rtn;
         }
 
         private double scaleRoll(double humanRoll)
         {
-            return (humanRoll - HumanShoulder.PITCH_MIN / HumanShoulder.PITCH_RANGE) * ROLL_RANGE;
+            return Util.clamp(((humanRoll - HumanElbow.YAW_MIN) / HumanElbow.YAW_RANGE) * ROLL_RANGE + ROLL_MIN, ROLL_MIN, ROLL_MAX);
         }
     }
 }
