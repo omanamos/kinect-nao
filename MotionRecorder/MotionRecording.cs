@@ -45,7 +45,7 @@ namespace MotionRecorder
                     {
                         for (int j = 0; j < 3; j++)
                         {
-                            pts[idx, j] = double.Parse(toks[idx + j]);
+                            pts[idx, j] = double.Parse(toks[1 + 3 * idx + j]);
                         }
                     }
                     RecordingPoint rp = new RecordingPoint(time, pts);

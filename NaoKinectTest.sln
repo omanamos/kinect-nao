@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visualizer", "Visualizer\Vi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualizerContent", "Visualizer\VisualizerContent\VisualizerContent.contentproj", "{A3C57D14-E728-40D8-89A4-5B9561584CA6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recognizer", "Recognizer\Recognizer.csproj", "{F75AA8BE-7357-4266-BD1E-3B19B03F3685}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = NaoKinectTest.vsmdi
@@ -82,6 +84,16 @@ Global
 		{A3C57D14-E728-40D8-89A4-5B9561584CA6}.Release|Any CPU.ActiveCfg = Release|x86
 		{A3C57D14-E728-40D8-89A4-5B9561584CA6}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{A3C57D14-E728-40D8-89A4-5B9561584CA6}.Release|x86.ActiveCfg = Release|x86
+		{F75AA8BE-7357-4266-BD1E-3B19B03F3685}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{F75AA8BE-7357-4266-BD1E-3B19B03F3685}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{F75AA8BE-7357-4266-BD1E-3B19B03F3685}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{F75AA8BE-7357-4266-BD1E-3B19B03F3685}.Debug|x86.ActiveCfg = Debug|x86
+		{F75AA8BE-7357-4266-BD1E-3B19B03F3685}.Debug|x86.Build.0 = Debug|x86
+		{F75AA8BE-7357-4266-BD1E-3B19B03F3685}.Release|Any CPU.ActiveCfg = Release|x86
+		{F75AA8BE-7357-4266-BD1E-3B19B03F3685}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{F75AA8BE-7357-4266-BD1E-3B19B03F3685}.Release|Mixed Platforms.Build.0 = Release|x86
+		{F75AA8BE-7357-4266-BD1E-3B19B03F3685}.Release|x86.ActiveCfg = Release|x86
+		{F75AA8BE-7357-4266-BD1E-3B19B03F3685}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

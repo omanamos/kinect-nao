@@ -26,7 +26,7 @@ namespace MotionRecorder
         private enum Modes { PLAY, RECORD } ;
 
         // Our kinect thread
-        KinectMock km = new KinectMock();
+        IKinect km = new RealKinect();
         // Our visualizer thread
         Visualizer.GameManagerThread gmt = new Visualizer.GameManagerThread();
         // Our timer for creating timestamps
@@ -191,7 +191,7 @@ namespace MotionRecorder
         {
             string directory = recordings_path.Text;
             string filename = recording_rep.Text + ".rec";
-            string totalName = System.IO.Path.Combine(directory, recording_title.Text, filename);
+            string totalName = System.IO.Path.Combine(directory, recording_title.Text + filename);
             currentMotionRecording.saveToFile(totalName);
         }
         #endregion
@@ -259,26 +259,29 @@ namespace MotionRecorder
 
         private void updatePlaybackStatus()
         {
-            motion_player.setMotionRecording(currentMotionRecording);
-            List<long> timestamps = currentMotionRecording.getPointTimestamps();
-            List<double> ticks = new List<double>(timestamps.Count);
-            foreach (long l in timestamps)
+            List<double> ticks = new List<double>();
+            if (currentMotionRecording == null || currentMotionRecording.getPointTimestamps().Count == 0)
             {
-                ticks.Add((double)l);
+                play_slider.Ticks = new DoubleCollection(ticks);
+                play_slider.Value = 0;
+                play_slider.Minimum = 0;
+                play_slider.Maximum = 0;
+                Console.WriteLine("Note: " + currentMotionRecording +  " has no points");
             }
-            
-            play_slider.Ticks = new DoubleCollection(ticks);
-            play_slider.Value = 0;
-            if (timestamps.Count > 0)
+            else
             {
+                motion_player.setMotionRecording(currentMotionRecording);
+                List<long> timestamps = currentMotionRecording.getPointTimestamps();
+                ticks = new List<double>(timestamps.Count);
+                foreach (long l in timestamps)
+                {
+                    ticks.Add((double)l);
+                }
+            
                 play_slider.Minimum = ticks[0];
                 play_slider.Value = play_slider.Minimum;
                 play_slider.Maximum = ticks[ticks.Count - 1];
                 play_slider.IsSnapToTickEnabled = true;
-            }
-            else
-            {
-                Console.WriteLine("Note: " + currentMotionRecording +  " has no points");
             }
         }
 

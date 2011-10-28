@@ -18,7 +18,7 @@ namespace MotionRecorder
         }
     }
 
-    public class KinectMock
+    public class KinectMock : IKinect
     {
         Thread t;
         private double[,] generateData()
