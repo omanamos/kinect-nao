@@ -17,7 +17,7 @@ namespace NaoKinectTest
     public partial class MainWindow : Window
     {
         Runtime nui = new Runtime();
-        private NaoController controller = new NaoController("128.208.4.10");
+        private NaoController controller = new NaoController("127.0.0.1");//"128.208.4.10");
         private SkeletonData _skel;
 
         public MainWindow()

@@ -23,6 +23,7 @@ namespace NaoKinectTest
                 proxy = new MotionProxy(ip, 9559);
                 float stiffness = 1.0f;
                 float time = 1.0f;
+                /*
                 proxy.stiffnessInterpolation("Head", stiffness, time);
                 proxy.stiffnessInterpolation("LShoulderPitch", stiffness, time);
                 proxy.stiffnessInterpolation("RShoulderPitch", stiffness, time);
@@ -45,6 +46,7 @@ namespace NaoKinectTest
                 proxy.stiffnessInterpolation("RHipRoll", stiffness, time);
                 proxy.stiffnessInterpolation("LAnkleRoll", stiffness, time);
                 proxy.stiffnessInterpolation("RAnkleRoll", stiffness, time);
+                 * */
             }
             catch (Exception e)
             {

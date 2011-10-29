@@ -121,6 +121,7 @@ namespace NaoKinectTest.HumanModel
                 shoulderPitch = -shoulderPitch;
             }
             
+            //TODO this is very wrong
             AxisAngleRotation3D aar = new AxisAngleRotation3D(
                 chestPlaneNormal, 90 - oldShoulderPitch);
             Transform3D t = new RotateTransform3D(aar);

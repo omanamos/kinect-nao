@@ -1,0 +1,9 @@
+*/obj/
+*/bin/
+*/*/obj/
+*/*/bin/
+NaoTests/
+*.testsettings
+*.suo
+*.cachefile
+*.vsmdi
