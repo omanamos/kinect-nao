@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DataStore
 {
-    class NaoPosition
+    public class NaoPosition
     {
         public double X { get; private set; }
         public double Y { get; private set; }

@@ -6,7 +6,7 @@ using NaoKinectTest.HumanModel;
 
 namespace DataStore
 {
-    class NaoSkeleton
+    public class NaoSkeleton
     {
         public NaoPosition Position { get; private set; }
         public NaoShoulder LeftShoulder { get; private set; }

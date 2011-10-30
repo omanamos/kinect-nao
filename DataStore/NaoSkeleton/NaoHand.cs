@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DataStore
 {
-    class NaoHand
+    public class NaoHand
     {
         private bool opened;
 

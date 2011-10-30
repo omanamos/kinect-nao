@@ -47,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionLibrary.cs" />
+    <Compile Include="ActionSequence.cs" />
     <Compile Include="HumanSkeleton.cs" />
     <Compile Include="NaoSkeleton\NaoElbow.cs" />
     <Compile Include="NaoSkeleton\NaoHand.cs" />

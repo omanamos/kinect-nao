@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DataStore
 {
-    class NaoWrist
+    public class NaoWrist
     {
         public static readonly double YAW_MIN = -1.8238;
         public static readonly double YAW_MAX = 1.8238;
