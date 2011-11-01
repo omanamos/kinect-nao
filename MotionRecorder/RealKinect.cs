@@ -6,12 +6,13 @@ using Microsoft.Research.Kinect.Nui;
 
 namespace MotionRecorder
 {
-    class RealKinect : IKinect
+    public class RealKinect : IKinect
     {
         public event NewDataEventHandler NewData;
 
         Runtime nui;
-        Dictionary<int, JointID> jointOrdering;
+        public readonly static Dictionary<int, JointID> JOINT_ORDERING = initOrdering();
+
         public RealKinect()
         {
             nui = new Runtime();
@@ -30,33 +31,37 @@ namespace MotionRecorder
                 MaxDeviationRadius = 0.05f
             };
 
-            jointOrdering = new Dictionary<int, JointID>();
-            jointOrdering[0] = JointID.FootRight;
-            jointOrdering[1] = JointID.AnkleRight;
-            jointOrdering[2] = JointID.KneeRight;
-            jointOrdering[3] = JointID.HipRight;
-            jointOrdering[4] = JointID.HipCenter;
-            jointOrdering[5] = JointID.Spine;
-            jointOrdering[6] = JointID.ShoulderCenter;
-            jointOrdering[7] = JointID.ShoulderRight;
-            jointOrdering[8] = JointID.ElbowRight;
-            jointOrdering[9] = JointID.WristRight;
-            jointOrdering[10] = JointID.HandRight;
-            jointOrdering[11] = JointID.Head;
-            jointOrdering[12] = JointID.HandLeft;
-            jointOrdering[13] = JointID.WristLeft;
-            jointOrdering[14] = JointID.ElbowLeft;
-            jointOrdering[15] = JointID.ShoulderLeft;
-            jointOrdering[16] = JointID.HipLeft;
-            jointOrdering[17] = JointID.KneeLeft;
-            jointOrdering[18] = JointID.AnkleLeft;
-            jointOrdering[19] = JointID.FootLeft;
-
             nui.SkeletonEngine.SmoothParameters = parameters;
 
             nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
             //nui.VideoFrameReady += new EventHandler<ImageFrameReadyEventArgs>(nui_VideoFrameReady);
             nui.NuiCamera.ElevationAngle = 8;
+        }
+
+        private static Dictionary<int, JointID> initOrdering()
+        {
+            Dictionary<int, JointID> rtn = new Dictionary<int, JointID>();
+            rtn[0] = JointID.FootRight;
+            rtn[1] = JointID.AnkleRight;
+            rtn[2] = JointID.KneeRight;
+            rtn[3] = JointID.HipRight;
+            rtn[4] = JointID.HipCenter;
+            rtn[5] = JointID.Spine;
+            rtn[6] = JointID.ShoulderCenter;
+            rtn[7] = JointID.ShoulderRight;
+            rtn[8] = JointID.ElbowRight;
+            rtn[9] = JointID.WristRight;
+            rtn[10] = JointID.HandRight;
+            rtn[11] = JointID.Head;
+            rtn[12] = JointID.HandLeft;
+            rtn[13] = JointID.WristLeft;
+            rtn[14] = JointID.ElbowLeft;
+            rtn[15] = JointID.ShoulderLeft;
+            rtn[16] = JointID.HipLeft;
+            rtn[17] = JointID.KneeLeft;
+            rtn[18] = JointID.AnkleLeft;
+            rtn[19] = JointID.FootLeft;
+            return rtn;
         }
 
         void nui_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
@@ -72,7 +77,7 @@ namespace MotionRecorder
                 double[,] data = new double[20, 3];
                 for (int i = 0; i < 20; i++)
                 {
-                    Vector position = skeleton.Joints[jointOrdering[i]].Position;
+                    Vector position = skeleton.Joints[JOINT_ORDERING[i]].Position;
                     data[i, 0] = position.X;
                     data[i, 1] = position.Y;
                     data[i, 2] = position.Z;

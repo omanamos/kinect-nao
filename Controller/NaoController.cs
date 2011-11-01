@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 
 using Aldebaran.Proxies;
+using DataStore;
 
 
-namespace NaoKinectTest
+namespace Controller
 {
-    class NaoController
+    public class NaoController
     {
         private static readonly float SPEED = 0.2f;
 
@@ -56,27 +57,19 @@ namespace NaoKinectTest
 
         public void update(NaoSkeleton skeleton)
         {
+            // TODO(namos): add in code to make the NAO walk
+
             //Shoulder Angles
             proxy.setAngles("LShoulderPitch", (float)skeleton.LeftShoulder.Pitch, SPEED);
             proxy.setAngles("RShoulderPitch", (float)skeleton.RightShoulder.Pitch, SPEED);
             proxy.setAngles("LShoulderRoll", (float)skeleton.LeftShoulder.Roll, SPEED);
             proxy.setAngles("RShoulderRoll", (float)skeleton.RightShoulder.Roll, SPEED);
-            //proxy.setAngles("LShoulderRoll", (float)0.0, SPEED);
-            //proxy.setAngles("RShoulderRoll", (float)0.0, SPEED);
-            //proxy.setAngles("LShoulderPitch", (float)0, SPEED);
-            //proxy.setAngles("RShoulderPitch", (float)0, SPEED);
 
             //Elbow Angles
-            proxy.setAngles("LElbowYaw", (float)skeleton.LeftElbow.getYaw(), SPEED);
-            proxy.setAngles("RElbowYaw", (float)skeleton.RightElbow.getYaw(), SPEED);
-            proxy.setAngles("LElbowRoll", (float)skeleton.LeftElbow.getRoll(), SPEED);
-            proxy.setAngles("RElbowRoll", (float)skeleton.RightElbow.getRoll(), SPEED);
-
-            //proxy.setAngles("LElbowYaw", (float)0.0, SPEED);
-            //proxy.setAngles("RElbowYaw", (float)0.0, SPEED);
-            //proxy.setAngles("LElbowRoll", (float)-0.04, SPEED);
-            //proxy.setAngles("RElbowRoll", (float)0.04, SPEED);
-
+            proxy.setAngles("LElbowYaw", (float)skeleton.LeftElbow.Yaw, SPEED);
+            proxy.setAngles("RElbowYaw", (float)skeleton.RightElbow.Yaw, SPEED);
+            proxy.setAngles("LElbowRoll", (float)skeleton.LeftElbow.Roll, SPEED);
+            proxy.setAngles("RElbowRoll", (float)skeleton.RightElbow.Roll, SPEED);
 
             //Shoulder Angles
             Console.Out.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
@@ -86,17 +79,16 @@ namespace NaoKinectTest
             Console.Out.WriteLine("RShoulderRoll: " + (float)skeleton.RightShoulder.Roll);
 
             //Elbow Angles
-            
-            Console.Out.WriteLine("LElbowYaw: " + (float)skeleton.LeftElbow.getYaw());
-            Console.Out.WriteLine("RElbowYaw: " + (float)skeleton.RightElbow.getYaw());
-            Console.Out.WriteLine("LElbowRoll: " + (float)skeleton.LeftElbow.getRoll());
-            Console.Out.WriteLine("RElbowRoll: " + (float)skeleton.RightElbow.getRoll());
+            Console.Out.WriteLine("LElbowYaw: " + (float)skeleton.LeftElbow.Yaw);
+            Console.Out.WriteLine("RElbowYaw: " + (float)skeleton.RightElbow.Yaw);
+            Console.Out.WriteLine("LElbowRoll: " + (float)skeleton.LeftElbow.Roll);
+            Console.Out.WriteLine("RElbowRoll: " + (float)skeleton.RightElbow.Roll);
              
             //Wrist Angles
             //proxy.setAngles("LWristYaw", (float)skeleton.LeftWrist.getYaw(), SPEED);
             //proxy.setAngles("RWristYaw", (float)skeleton.RightWrist.getYaw(), SPEED);
 
-            //Hand Angles
+            //Hand
             //proxy.setAngles("LHand", (float)skeleton.LeftHand.isOpen(), SPEED);
             //proxy.setAngles("RHand", (float)skeleton.RightHand.isOpen(), SPEED);
         }
