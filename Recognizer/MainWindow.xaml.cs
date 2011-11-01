@@ -89,13 +89,13 @@ namespace Recognizer
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            foo2();
+            //foo2();
             var emissionProbs = 
                 new MultivariateNormalDistribution(4);
             // Creates a continuous hidden Markov Model with two states organized in a forward
             //  topology and an underlying univariate Normal distribution as probability density.
             var hmm = new HiddenMarkovModel<MultivariateNormalDistribution>(
-                    new Forward(8), emissionProbs);
+                    new Forward(6), emissionProbs);
             // Configure the learning algorithms to train the sequence classifier until the
             // difference in the average log-likelihood changes only by as little as 0.0001
             var teacher =
@@ -103,43 +103,70 @@ namespace Recognizer
                 {
                     Tolerance = 0.0001,
                     Iterations = 0,
+                    // Specify a regularization constant
+                    FittingOptions = new NormalOptions() { Regularization = 1e-5 }
                 };
 
             // 10 sequences, each of 100pts, in 4 dimensions
-            int nseqs = 1;
+            int nseqs = 10;
             double[][][] sequences = new double[nseqs][][];//, 100, 4];
 
             for (int i=0; i < nseqs; i++)
             {
                 // Fill the sequence with random numbers
-                sequences[i] = emissionProbs.Generate(100);
-                
+                sequences[i] = emissionProbs.Generate(10);
+
+                //sequences[i] = new double[10][];
+
                 // First dimension should linearly increase
-                for (int j = 0; j < 100; j++)
+                for (int j = 0; j < 10; j++)
                 {
+                    //sequences[i][j] = new double[4];
                     sequences[i][j][0] = j;
+                    sequences[i][j][1] *= 10;
+                    sequences[i][j][2] *= 10;
+                    sequences[i][j][3] *= 10;
                 }
             }
 
             // Fit the model
             double likelihood = teacher.Run(sequences);
             Console.WriteLine("Average LL for training sequences: " + likelihood);
-            double[][] query1 = emissionProbs.Generate(100);
-            for (int i = 0; i < 100; i++)
+            double[][] query1 = emissionProbs.Generate(10);
+            for (int i = 0; i < query1.GetLength(0); i++)
             {
                 query1[i][0] = i;
+                query1[i][1] *= 10;
+                query1[i][2] *= 10;
+                query1[i][3] *= 10;
             }
-
-            double l1 = hmm.Evaluate(query1, true);
+            foreach (var em in hmm.Emissions)
+            {
+                foreach (var m in em.Mean)
+                {
+                    Console.Write(m + " ");
+                }
+                foreach (var v in em.Variance)
+                {
+                    Console.Write(v + " ");
+                }
+                Console.WriteLine();
+            }
+            double l1 = hmm.Evaluate(query1, false);
             Console.WriteLine("Likelihood: " + l1);
 
-            double[][] query2 = emissionProbs.Generate(100);
-            for (int i = 0; i < 100; i++)
+            double[][] query2 = emissionProbs.Generate(10);
+            for (int i = 0; i < query2.GetLength(0); i++)
             {
-                query2[i][0] = 100 - i;
+                query2[i][0] = i;
+                query2[i][1] *= 10;
+                query2[i][1] += 0.00001;
+                query2[i][2] *= 10;
+                query2[i][3] *= 10;
             }
+            
 
-            double l2 = hmm.Evaluate(query1, true);
+            double l2 = hmm.Evaluate(query2, false);
             Console.WriteLine("Likelihood: " + l2);
             Console.ReadKey();
         }
