@@ -119,7 +119,7 @@ namespace DataStore
         public NaoSkeleton getNaoSkeleton()
         {
             Joint center = hk.getJoint(JointID.HipCenter);
-            NaoPosition position = new NaoPosition(center.x, center.y, center.z);
+            NaoPosition position = new NaoPosition((float)center.x, (float)center.y, (float)center.z);
 
             NaoElbow LElbow = new NaoElbow(this.angles[(int)NaoJointAngle.LElbowYaw], this.angles[(int)NaoJointAngle.LElbowRoll], true);
             NaoElbow RElbow = new NaoElbow(this.angles[(int)NaoJointAngle.RElbowYaw], this.angles[(int)NaoJointAngle.RElbowRoll], false);

@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 namespace DataStore
 {
     [Serializable]
-    public class ActionSequence<T> where T : ISkeleton , ISerializable
+    public class ActionSequence<T>:  ISerializable where T : ISkeleton
     {
         private List<T> states;
         private int cur;
@@ -43,7 +43,7 @@ namespace DataStore
 
         public ActionSequence(SerializationInfo info, StreamingContext ctxt)
         {
-            this.states = (List<E>)info.GetValue("states", typeof(List<E>));
+            this.states = (List<T>)info.GetValue("states", typeof(List<T>));
             this.cur = (int)info.GetValue("cur", typeof(int));
         }
 
