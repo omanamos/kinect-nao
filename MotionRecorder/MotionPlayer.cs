@@ -79,6 +79,11 @@ namespace MotionRecorder
                     {
                         Thread.Sleep(10);
                     }
+                    if (stopped)
+                    {
+                        // Our sleeping loop was interrupted because we were told to exit
+                        continue;
+                    }
                     OnPlaybackProgress(new PlaybackProgressEventArgs(prev_ts));
                     idx++;
                     if (idx == timestamps.Count)

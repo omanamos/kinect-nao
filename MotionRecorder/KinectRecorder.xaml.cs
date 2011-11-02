@@ -26,8 +26,8 @@ namespace MotionRecorder
         private enum Modes { PLAY, RECORD } ;
 
         // Our kinect thread
-        //IKinect km = new RealKinect();
-        IKinect km = new KinectMock();
+        IKinect km = new RealKinect();
+        //IKinect km = new KinectMock();
         // Our visualizer thread
         Visualizer.GameManagerThread gmt = new Visualizer.GameManagerThread();
         // Our timer for creating timestamps
@@ -256,8 +256,9 @@ namespace MotionRecorder
         {
             playControlLastDragged = false;
             playing = !playing;
-            if (playing)
+            /*if (playing)
                 motion_player.seek(play_slider.Value);
+             * */
             motion_player.togglePaused();
         }
 

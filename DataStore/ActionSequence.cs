@@ -49,9 +49,15 @@ namespace DataStore
 
             double[][] arr = new double[states.Count][];
 
+            arr[0] = states[0].toArray(jointVals);
+
             for (int i = 0; i < states.Count; i++)
             {
                 arr[i] = states[i].toArray(jointVals);
+                for (int j = 0; j < arr[0].Length; j++)
+                {
+                    arr[i][j] -= arr[0][j];
+                }
             }
             return arr;
         }

@@ -20,6 +20,7 @@ using Accord.Statistics.Distributions.Fitting;
 using MotionRecorder;
 using System.IO;
 using DataStore;
+using NaoController;
 
 namespace Recognizer
 {
@@ -117,14 +118,33 @@ namespace Recognizer
                 // add that to the sequences array
                 sequences[i] = trainSeq;
             }
-            if (datafiles.Count > 0)
+            bool doTrain = false;
+            if (doTrain)
             {
-                // train a HMM
-                HiddenMarkovModel<MultivariateNormalDistribution> hmm = trainHMM(sequences);
-                // save it to filename.hmm
-                ModelSerializer.serialize(hmm, 
-                    System.IO.Path.Combine(dirName, actName + ".hmm"));
+                if (datafiles.Count > 0)
+                {
+                    // train a HMM
+                    HiddenMarkovModel<MultivariateNormalDistribution> hmm = trainHMM(sequences);
+                    // save it to filename.hmm
+                    SerializableHmm s = new SerializableHmm(actName, hmm);
+                    s.SaveToDisk();
+                }
             }
+            else
+            {
+                SerializableHmm ser = new SerializableHmm("walk forward");
+                HiddenMarkovModel<MultivariateNormalDistribution> hmm = ser.LoadFromDisk();
+
+                foreach (double[][] seq in sequences)
+                {
+                    double l = hmm.Evaluate(seq, false);
+                    Console.WriteLine("Likelihood: " + l);
+                }
+            }
+
+            /*
+            */
+            
         }
 
         private HiddenMarkovModel<MultivariateNormalDistribution>
@@ -173,12 +193,41 @@ namespace Recognizer
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            
             List<string> train_files = new List<string>();
-            train_files.Add("\\\\cseexec.cs.washington.edu\\cs\\nt\\homes\\istudents\\pbrook\\WindowsFolders\\Desktop\\wave2.rec");
-
+            
+            
+            for (int i = 1; i <= 10; i++)
+            {
+                train_files.Add(@"Z:/WindowsFolders/Desktop/walk forward" + i + ".rec");
+            }
+            
+            
+            train_files.Add(@"Z:/WindowsFolders/Desktop/walk forward11.rec");
+            train_files.Add(@"Z:/WindowsFolders/Desktop/walk forward12.rec");
+            train_files.Add(@"Z:/WindowsFolders/Desktop/walk forward13.rec");
+            
             train(train_files);
 
-            /*
+             /*
+            var emissionProbs =
+                new MultivariateNormalDistribution(4);
+            // Creates a continuous hidden Markov Model with two states organized in a forward
+            //  topology and an underlying univariate Normal distribution as probability density.
+            var hmm = new HiddenMarkovModel<MultivariateNormalDistribution>(
+                    new Forward(8), emissionProbs);
+            // Configure the learning algorithms to train the sequence classifier until the
+            // difference in the average log-likelihood changes only by as little as 0.0001
+            var teacher =
+                new BaumWelchLearning<MultivariateNormalDistribution>(hmm)
+                {
+                    Tolerance = 0.0001,
+                    Iterations = 0,
+                    // Specify a regularization constant
+                    FittingOptions = new NormalOptions() { Regularization = 1e-5 }
+                };
+
+          
             
 
             // 10 sequences, each of 100pts, in 4 dimensions
@@ -205,8 +254,13 @@ namespace Recognizer
 
             // Fit the model
             double likelihood = teacher.Run(sequences);
-            ModelSerializer.serialize(hmm, "Z:\\WindowsFolders\\Desktop\\hmm.ser");
-            HiddenMarkovModel<MultivariateNormalDistribution> hmm2 = ModelSerializer.deserialize("Z:\\WindowsFolders\\Desktop\\hmm.ser");
+            SerializableHmm h = new SerializableHmm("myname", hmm);
+            h.SaveToDisk();
+            //ModelSerializer.serialize(hmm, "Z:\\WindowsFolders\\Desktop\\hmm.ser");
+            // = ModelSerializer.deserialize("Z:\\WindowsFolders\\Desktop\\hmm.ser");
+
+            SerializableHmm h2 = new SerializableHmm("myname");
+            HiddenMarkovModel<MultivariateNormalDistribution> hmm2 = h2.LoadFromDisk();
 
             Console.WriteLine("Average LL for training sequences: " + likelihood);
             double[][] query1 = emissionProbs.Generate(10);
@@ -231,6 +285,8 @@ namespace Recognizer
             }
             double l1 = hmm.Evaluate(query1, false);
             Console.WriteLine("Likelihood: " + l1);
+            double l1c = hmm2.Evaluate(query1, false);
+            Console.WriteLine("Likelihood: " + l1c);
 
             double[][] query2 = emissionProbs.Generate(10);
             for (int i = 0; i < query2.GetLength(0); i++)
@@ -246,7 +302,7 @@ namespace Recognizer
             double l2 = hmm.Evaluate(query2, false);
             Console.WriteLine("Likelihood: " + l2);
             Console.ReadKey();
-             * */
+              * */
         }
     }
 }
