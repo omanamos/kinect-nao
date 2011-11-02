@@ -95,7 +95,7 @@ namespace Recognizer
             // Creates a continuous hidden Markov Model with two states organized in a forward
             //  topology and an underlying univariate Normal distribution as probability density.
             var hmm = new HiddenMarkovModel<MultivariateNormalDistribution>(
-                    new Forward(6), emissionProbs);
+                    new Forward(8), emissionProbs);
             // Configure the learning algorithms to train the sequence classifier until the
             // difference in the average log-likelihood changes only by as little as 0.0001
             var teacher =
@@ -108,7 +108,7 @@ namespace Recognizer
                 };
 
             // 10 sequences, each of 100pts, in 4 dimensions
-            int nseqs = 10;
+            int nseqs = 100;
             double[][][] sequences = new double[nseqs][][];//, 100, 4];
 
             for (int i=0; i < nseqs; i++)
@@ -131,6 +131,10 @@ namespace Recognizer
 
             // Fit the model
             double likelihood = teacher.Run(sequences);
+            
+            ModelSerializer.serialize(hmm, "Z:\\WindowsFolders\\Desktop\\hmm.ser");
+            HiddenMarkovModel<MultivariateNormalDistribution> hmm2 = ModelSerializer.deserialize("Z:\\WindowsFolders\\Desktop\\hmm.ser");
+            
             Console.WriteLine("Average LL for training sequences: " + likelihood);
             double[][] query1 = emissionProbs.Generate(10);
             for (int i = 0; i < query1.GetLength(0); i++)

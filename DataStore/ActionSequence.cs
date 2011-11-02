@@ -5,14 +5,14 @@ using System.Text;
 
 namespace DataStore
 {
-    public class ActionSequence
+    public class ActionSequence<E>
     {
-        private List<NaoSkeleton> states;
+        private List<E> states;
         private int cur;
 
         private ActionSequence() { }
 
-        public ActionSequence(List<NaoSkeleton> states)
+        public ActionSequence(List<E> states)
         {
             this.cur = -1;
             this.states = states;
@@ -23,12 +23,12 @@ namespace DataStore
             return this.cur != states.Count;
         }
 
-        public NaoSkeleton current()
+        public E current()
         {
             return this.states[this.cur];
         }
         
-        public NaoSkeleton next()
+        public E next()
         {
             this.cur++;
             return this.states[this.cur];

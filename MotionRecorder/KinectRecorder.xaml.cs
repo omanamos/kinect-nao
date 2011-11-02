@@ -26,7 +26,8 @@ namespace MotionRecorder
         private enum Modes { PLAY, RECORD } ;
 
         // Our kinect thread
-        IKinect km = new RealKinect();
+        //IKinect km = new RealKinect();
+        IKinect km = new KinectMock();
         // Our visualizer thread
         Visualizer.GameManagerThread gmt = new Visualizer.GameManagerThread();
         // Our timer for creating timestamps
@@ -287,9 +288,10 @@ namespace MotionRecorder
 
         void motion_player_PlaybackProgress(object sender, PlaybackProgressEventArgs e)
         {
+            // Update the slider in the UI thread
             Action<Slider, double> act = new Action<Slider, double>(updateSlider);
             Dispatcher.BeginInvoke(act, play_slider, e.Timestamp);
-            //play_slider.Value = e.Timestamp;
+
             showFrameAtTimestamp(e.Timestamp);
         }
 

@@ -39,8 +39,9 @@ namespace MotionRecorder
                     string line = r.ReadLine();
                     string[] toks = line.Split(' ');
                     long time = long.Parse(toks[0]);
-                    double[,] pts = new double[toks.Length - 1, 3];
                     int numPts = (toks.Length - 1) / 3;
+                    double[,] pts = new double[numPts, 3];
+                    
                     for (int idx = 0; idx < numPts; idx++)
                     {
                         for (int j = 0; j < 3; j++)
