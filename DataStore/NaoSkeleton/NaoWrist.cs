@@ -7,15 +7,15 @@ namespace DataStore
 {
     public class NaoWrist
     {
-        public static readonly float YAW_MIN = -1.8238f;
-        public static readonly float YAW_MAX = 1.8238f;
-        public static readonly float YAW_RANGE = YAW_MAX - YAW_MIN;
+        public static readonly double YAW_MIN = -1.8238;
+        public static readonly double YAW_MAX = 1.8238;
+        public static readonly double YAW_RANGE = YAW_MAX - YAW_MIN;
 
-        public float Yaw { get; private set; }
+        public double Yaw { get; private set; }
 
         private NaoWrist(){}
 
-        public NaoWrist(float yaw)
+        public NaoWrist(double yaw)
         {
             if (Util.isWithinRange(yaw, YAW_MIN, YAW_MAX))
             {
