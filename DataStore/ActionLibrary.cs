@@ -5,21 +5,21 @@ using System.Text;
 
 namespace DataStore
 {
-    public class ActionLibrary
+    public class ActionLibrary<T> where T : ISkeleton
     {
-        private Dictionary<String, ActionSequence> actions;
+        private Dictionary<String, ActionSequence<T>> actions;
 
         public ActionLibrary()
         {
-            this.actions = new Dictionary<string, ActionSequence>();
+            this.actions = new Dictionary<string, ActionSequence<T>>();
         }
 
-        public void mapAction(string name, ActionSequence seq)
+        public void mapAction(string name, ActionSequence<T> seq)
         {
             this.actions[name] = seq;
         }
 
-        public ActionSequence getSequence(string name)
+        public ActionSequence<T> getSequence(string name)
         {
             if (!this.actions.ContainsKey(name))
             {

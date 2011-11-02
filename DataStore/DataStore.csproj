@@ -50,6 +50,7 @@
     <Compile Include="ActionLibrary.cs" />
     <Compile Include="ActionSequence.cs" />
     <Compile Include="HumanSkeleton.cs" />
+    <Compile Include="ISkeleton.cs" />
     <Compile Include="NaoSkeleton\NaoElbow.cs" />
     <Compile Include="NaoSkeleton\NaoHand.cs" />
     <Compile Include="NaoSkeleton\NaoPosition.cs" />
