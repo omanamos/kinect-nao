@@ -8,7 +8,7 @@ using Microsoft.Research.Kinect.Nui;
 using MotionRecorder;
 using DataStore;
 
-namespace NaoKinectTest.HumanModel
+namespace DataStore
 {
     public class HumanSkeleton : ISkeleton
     {

@@ -17,7 +17,6 @@ using Accord.Statistics.Models.Markov.Topology;
 using Accord.Statistics.Models.Markov.Learning;
 using Accord.Statistics.Distributions.Univariate;
 using Accord.Statistics.Distributions.Fitting;
-using NaoKinectTest.HumanModel;
 using MotionRecorder;
 using System.IO;
 using DataStore;

@@ -7,7 +7,6 @@ using Accord.Statistics.Models.Markov;
 using Accord.Statistics.Distributions.Multivariate;
 using Accord.Statistics.Models.Markov.Topology;
 using DataStore;
-using NaoKinectTest.HumanModel;
 
 namespace Recognizer
 {
