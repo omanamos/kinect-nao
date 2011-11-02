@@ -23,5 +23,10 @@ namespace Controller
         {
             InitializeComponent();
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            MainController controller = new MainController();
+        }
     }
 }

@@ -20,34 +20,10 @@ namespace Controller
         {
             try
             {
+                // TODO(namos): set the stiffness in a cleaner way
                 lastUpdate = null;
                 proxy = new MotionProxy(ip, 9559);
-                float stiffness = 1.0f;
-                float time = 1.0f;
-                /*
-                proxy.stiffnessInterpolation("Head", stiffness, time);
-                proxy.stiffnessInterpolation("LShoulderPitch", stiffness, time);
-                proxy.stiffnessInterpolation("RShoulderPitch", stiffness, time);
-                proxy.stiffnessInterpolation("LShoulderRoll", stiffness, time);
-                proxy.stiffnessInterpolation("RShoulderRoll", stiffness, time);
-                proxy.stiffnessInterpolation("LElbowYaw", stiffness, time);
-                proxy.stiffnessInterpolation("RElbowYaw", stiffness, time);
-                proxy.stiffnessInterpolation("LElbowRoll", stiffness, time);
-                proxy.stiffnessInterpolation("RElbowRoll", stiffness, time);
-
-                proxy.stiffnessInterpolation("RHipYawPitch", stiffness, time);
-                proxy.stiffnessInterpolation("LHipYawPitch", stiffness, time);
-                proxy.stiffnessInterpolation("LHipPitch", stiffness, time);
-                proxy.stiffnessInterpolation("RHipPitch", stiffness, time);
-                proxy.stiffnessInterpolation("LKneePitch", stiffness, time);
-                proxy.stiffnessInterpolation("RKneePitch", stiffness, time);
-                proxy.stiffnessInterpolation("LAnklePitch", stiffness, time);
-                proxy.stiffnessInterpolation("RAnklePitch", stiffness, time);
-                proxy.stiffnessInterpolation("LHipRoll", stiffness, time);
-                proxy.stiffnessInterpolation("RHipRoll", stiffness, time);
-                proxy.stiffnessInterpolation("LAnkleRoll", stiffness, time);
-                proxy.stiffnessInterpolation("RAnkleRoll", stiffness, time);
-                 * */
+                this.setStiffness(1.0f);
             }
             catch (Exception e)
             {
@@ -55,9 +31,43 @@ namespace Controller
             }
         }
 
+        public void exit()
+        {
+            this.setStiffness(0.0f);
+        }
+
+        private void setStiffness(float stiffness)
+        {
+            float time = 1.0f;
+            proxy.stiffnessInterpolation("Head", stiffness, time);
+            proxy.stiffnessInterpolation("LShoulderPitch", stiffness, time);
+            proxy.stiffnessInterpolation("RShoulderPitch", stiffness, time);
+            proxy.stiffnessInterpolation("LShoulderRoll", stiffness, time);
+            proxy.stiffnessInterpolation("RShoulderRoll", stiffness, time);
+            proxy.stiffnessInterpolation("LElbowYaw", stiffness, time);
+            proxy.stiffnessInterpolation("RElbowYaw", stiffness, time);
+            proxy.stiffnessInterpolation("LElbowRoll", stiffness, time);
+            proxy.stiffnessInterpolation("RElbowRoll", stiffness, time);
+
+            proxy.stiffnessInterpolation("RHipYawPitch", stiffness, time);
+            proxy.stiffnessInterpolation("LHipYawPitch", stiffness, time);
+            proxy.stiffnessInterpolation("LHipPitch", stiffness, time);
+            proxy.stiffnessInterpolation("RHipPitch", stiffness, time);
+            proxy.stiffnessInterpolation("LKneePitch", stiffness, time);
+            proxy.stiffnessInterpolation("RKneePitch", stiffness, time);
+            proxy.stiffnessInterpolation("LAnklePitch", stiffness, time);
+            proxy.stiffnessInterpolation("RAnklePitch", stiffness, time);
+            proxy.stiffnessInterpolation("LHipRoll", stiffness, time);
+            proxy.stiffnessInterpolation("RHipRoll", stiffness, time);
+            proxy.stiffnessInterpolation("LAnkleRoll", stiffness, time);
+            proxy.stiffnessInterpolation("RAnkleRoll", stiffness, time);
+        }
+
         public void update(NaoSkeleton skeleton)
         {
             // TODO(namos): add in code to make the NAO walk
+            // TODO(namos): angleInterplation? to send multiple angles at once
+            //proxy.angleInterpolation("", "", "", true);
 
             //Shoulder Angles
             proxy.setAngles("LShoulderPitch", (float)skeleton.LeftShoulder.Pitch, SPEED);

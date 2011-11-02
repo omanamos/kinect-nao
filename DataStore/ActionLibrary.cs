@@ -7,25 +7,36 @@ namespace DataStore
 {
     public class ActionLibrary
     {
-        private Dictionary<String, ActionSequence> actions;
+        private Dictionary<string, ActionSequence<NaoSkeleton>> actions;
 
         public ActionLibrary()
         {
-            this.actions = new Dictionary<string, ActionSequence>();
+            this.actions = new Dictionary<string, ActionSequence<NaoSkeleton>>();
         }
 
-        public void mapAction(string name, ActionSequence seq)
+        public void mapAction(string name, ActionSequence<NaoSkeleton> seq)
         {
             this.actions[name] = seq;
         }
 
-        public ActionSequence getSequence(string name)
+        public ActionSequence<NaoSkeleton> getSequence(string name)
         {
             if (!this.actions.ContainsKey(name))
             {
                 throw new ArgumentException(name + " is an unknown action.");
             }
             return this.actions[name];
+        }
+
+        public static ActionLibrary load(String path)
+        {
+            // TODO(johnson): load from a file
+            return null;
+        }
+
+        public void save(String path)
+        {
+            // TODO(johnson): save to a file
         }
     }
 }

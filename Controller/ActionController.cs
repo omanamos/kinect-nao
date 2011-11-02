@@ -18,22 +18,27 @@ namespace Controller
             this.nao = new NaoController("127.0.0.1");
         }
 
-        public void runAction(ActionSequence action)
+        public void runAction(ActionSequence<NaoSkeleton> action)
         {
             Executor executor = new Executor(action, nao, FPS);
             Thread t = new Thread(new ThreadStart(executor.run));
             t.Start();
             t.Join();
         }
+
+        public void exit()
+        {
+            nao.exit();
+        }
     }
 
     public class Executor
     {
-        private ActionSequence action;
+        private ActionSequence<NaoSkeleton> action;
         private NaoController nao;
         private int interval;
 
-        public Executor(ActionSequence action, NaoController nao, int fps)
+        public Executor(ActionSequence<NaoSkeleton> action, NaoController nao, int fps)
         {
             this.action = action;
             this.nao = nao;
