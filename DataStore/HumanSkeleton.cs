@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 
 using Microsoft.Research.Kinect.Nui;
-
-using Emgu.CV;
-
 using MotionRecorder;
 
-namespace NaoKinectTest.HumanModel
+namespace DataStore
 {
     public class HumanSkeleton
     {
