@@ -25,6 +25,11 @@ namespace Controller
             t.Start();
             t.Join();
         }
+
+        public void exit()
+        {
+            nao.exit();
+        }
     }
 
     public class Executor
