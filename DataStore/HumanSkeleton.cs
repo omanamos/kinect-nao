@@ -20,7 +20,7 @@ namespace DataStore
             {
                 joints.Add(RealKinect.JOINT_ORDERING[i], new Joint(double.Parse(line[1 + 3 * i]), 
                         double.Parse(line[2 + 3 * i]), double.Parse(line[3 + 3 * i])));
-            }
+            }            
         }
 
         public Joint getJoint(JointID id)
