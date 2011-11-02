@@ -14,6 +14,11 @@ namespace DataStore
             this.actions = new Dictionary<string, ActionSequence<NaoSkeleton>>();
         }
 
+        public Dictionary<string, ActionSequence<NaoSkeleton>>.KeyCollection getCommands()
+        {
+            return this.actions.Keys;
+        }
+
         public void mapAction(string name, ActionSequence<NaoSkeleton> seq)
         {
             this.actions[name] = seq;
