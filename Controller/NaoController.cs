@@ -15,6 +15,7 @@ namespace Controller
 
         private MotionProxy proxy;
         private NaoSkeleton lastUpdate;
+        private TextToSpeechProxy tts;
 
         public NaoController(string ip)
         {
@@ -101,6 +102,11 @@ namespace Controller
             //Hand
             //proxy.setAngles("LHand", (float)skeleton.LeftHand.isOpen(), SPEED);
             //proxy.setAngles("RHand", (float)skeleton.RightHand.isOpen(), SPEED);
+        }
+        public void speak(String context, string ip)
+        {
+            tts = new TextToSpeechProxy(ip, 9559);
+            tts.say(context);
         }
     }
 }

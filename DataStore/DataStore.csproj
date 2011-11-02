@@ -38,6 +38,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Microsoft Research KinectSDK\Microsoft.Research.Kinect.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,11 +46,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionLibrary.cs" />
     <Compile Include="ActionSequence.cs" />
+    <Compile Include="AngleConverter.cs" />
     <Compile Include="HumanSkeleton.cs" />
+    <Compile Include="ISkeleton.cs" />
     <Compile Include="NaoSkeleton\NaoElbow.cs" />
     <Compile Include="NaoSkeleton\NaoHand.cs" />
     <Compile Include="NaoSkeleton\NaoPosition.cs" />

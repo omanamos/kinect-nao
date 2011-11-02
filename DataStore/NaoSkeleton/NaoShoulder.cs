@@ -9,30 +9,30 @@ namespace DataStore
     [Serializable]
     public class NaoShoulder : ISerializable
     {
-        public static readonly double PITCH_MIN = -2.0856;
-        public static readonly double PITCH_MAX = 2.0856;
-        public static readonly double PITCH_RANGE = PITCH_MAX - PITCH_MIN;
+        public static readonly float PITCH_MIN = -2.0856f;
+        public static readonly float PITCH_MAX = 2.0856f;
+        public static readonly float PITCH_RANGE = PITCH_MAX - PITCH_MIN;
 
-        public readonly double ROLL_MIN;
-        public readonly double ROLL_MAX;
-        public readonly double ROLL_RANGE;
+        public readonly float ROLL_MIN;
+        public readonly float ROLL_MAX;
+        public readonly float ROLL_RANGE;
 
-        public double Pitch { get; private set; }
-        public double Roll { get; private set; }
+        public float Pitch { get; private set; }
+        public float Roll { get; private set; }
 
         private NaoShoulder(){}
 
-        public NaoShoulder(double pitch, double roll, bool leftSide)
+        public NaoShoulder(float pitch, float roll, bool leftSide)
         {
             if (leftSide)
             {
-                ROLL_MIN = -0.3142;
-                ROLL_MAX = 1.3265;
+                ROLL_MIN = -0.3142f;
+                ROLL_MAX = 1.3265f;
             }
             else
             {
-                ROLL_MIN = -1.3265;
-                ROLL_MAX = 0.3142;
+                ROLL_MIN = -1.3265f;
+                ROLL_MAX = 0.3142f;
             }
             ROLL_RANGE = ROLL_MAX - ROLL_MIN;
 
@@ -57,8 +57,8 @@ namespace DataStore
 
         public NaoShoulder(SerializationInfo info, StreamingContext ctxt)
         {
-            this.Pitch = (double)info.GetValue("Pitch", typeof(double));
-            this.Roll = (double)info.GetValue("Roll", typeof(double));
+            this.Pitch = (float)info.GetValue("Pitch", typeof(float));
+            this.Roll = (float)info.GetValue("Roll", typeof(float));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext ctxt)

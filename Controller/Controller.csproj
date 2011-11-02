@@ -105,6 +105,10 @@
       <Project>{27EDAA3C-55A5-470D-9316-0A4881C417A5}</Project>
       <Name>DataStore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Recognizer\Recognizer.csproj">
+      <Project>{F75AA8BE-7357-4266-BD1E-3B19B03F3685}</Project>
+      <Name>Recognizer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

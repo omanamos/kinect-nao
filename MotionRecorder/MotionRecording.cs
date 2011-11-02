@@ -6,9 +6,9 @@ using System.IO;
 
 namespace MotionRecorder
 {
-    class MotionRecording
+    public class MotionRecording
     {
-        private List<RecordingPoint> points;
+        public List<RecordingPoint> points;
         private Dictionary<long, RecordingPoint> timestampMap;
         private string name;
         
@@ -21,6 +21,8 @@ namespace MotionRecorder
             {
                 timestampMap[p.Time] = p;
             }
+            StartTimestamp = timestampMap.Keys.Min();
+            EndTimestamp = timestampMap.Keys.Max();
         }
 
         public RecordingPoint getPointFromTimestamp(long timestamp)
@@ -62,18 +64,22 @@ namespace MotionRecorder
             {
                 foreach (RecordingPoint r in points)
                 {
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append(r.Time);
-                    for (int i = 0; i < r.Data.GetLength(0); i++)
+                    // Make sure the point is within our possibly reduced start and end
+                    if (r.Time >= StartTimestamp && r.Time <= EndTimestamp)
                     {
-                        sb.Append(" ");
-                        sb.Append(r.Data[i, 0]);
-                        sb.Append(" ");
-                        sb.Append(r.Data[i, 1]);
-                        sb.Append(" ");
-                        sb.Append(r.Data[i, 2]);
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(r.Time);
+                        for (int i = 0; i < r.Data.GetLength(0); i++)
+                        {
+                            sb.Append(" ");
+                            sb.Append(r.Data[i, 0]);
+                            sb.Append(" ");
+                            sb.Append(r.Data[i, 1]);
+                            sb.Append(" ");
+                            sb.Append(r.Data[i, 2]);
+                        }
+                        s.WriteLine(sb.ToString());
                     }
-                    s.WriteLine(sb.ToString());
                 }
             }
         }
@@ -87,6 +93,9 @@ namespace MotionRecorder
         {
             return name;
         }
+
+        public long StartTimestamp { get; set; }
+        public long EndTimestamp { get; set; }
 
     }
 }

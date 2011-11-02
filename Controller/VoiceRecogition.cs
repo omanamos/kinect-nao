@@ -23,11 +23,11 @@ namespace Controller
 
             recogEng.LoadGrammar(CreateSampleGrammar(prefix, list));
             this.start();
-            Console.WriteLine("Initialized...");
         }
 
         private void speechRecog_success(object sender, SpeechRecognizedEventArgs args)
         {
+            controller.processCommand(args.Result.Text);
             Console.WriteLine("Recognized: {0} - {1}", args.Result.Text, args.Result.Confidence);
         }
 

@@ -11,11 +11,16 @@ namespace DataStore
     [Serializable]
     public class ActionLibrary : ISerializable
     {
-        private Dictionary<string, ActionSequence<NaoSkeleton>> actions;
+        private Dictionary<String, ActionSequence<NaoSkeleton>> actions;
 
         public ActionLibrary()
         {
             this.actions = new Dictionary<string, ActionSequence<NaoSkeleton>>();
+        }
+
+        public Dictionary<string, ActionSequence<NaoSkeleton>>.KeyCollection getCommands()
+        {
+            return this.actions.Keys;
         }
 
         public void mapAction(string name, ActionSequence<NaoSkeleton> seq)

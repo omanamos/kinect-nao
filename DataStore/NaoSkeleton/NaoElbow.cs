@@ -9,20 +9,20 @@ namespace DataStore
     [Serializable]
     public class NaoElbow : ISerializable
     {
-        public static readonly double YAW_MIN = -2.0856;
-        public static readonly double YAW_MAX = 2.0856;
-        public static readonly double YAW_RANGE = YAW_MAX - YAW_MIN;
+        public static readonly float YAW_MIN = -2.0856f;
+        public static readonly float YAW_MAX = 2.0856f;
+        public static readonly float YAW_RANGE = YAW_MAX - YAW_MIN;
 
-        public static readonly double ROLL_MIN = 0.0349;
-        public static readonly double ROLL_MAX = 1.5446;
-        public static readonly double ROLL_RANGE = ROLL_MAX - ROLL_MIN;
+        public static readonly float ROLL_MIN = 0.0349f;
+        public static readonly float ROLL_MAX = 1.5446f;
+        public static readonly float ROLL_RANGE = ROLL_MAX - ROLL_MIN;
 
-        public double Yaw { get; private set; }
-        public double Roll { get; private set; }
+        public float Yaw { get; private set; }
+        public float Roll { get; private set; }
 
-        private NaoElbow(){}
+        private NaoElbow() { }
 
-        public NaoElbow(double yaw, double roll)
+        public NaoElbow(float yaw, float roll, bool leftSide)
         {
             if (Util.isWithinRange(yaw, YAW_MIN, YAW_MAX))
             {
@@ -33,20 +33,32 @@ namespace DataStore
                 throw new ArgumentException(yaw + " is outside of range (" + YAW_MIN + ", " + YAW_MAX + ")");
             }
 
-            if (Util.isWithinRange(roll, ROLL_MIN, ROLL_MAX))
+            float roll_min;
+            float roll_max;
+            if (leftSide)
+            {
+                roll_min = -1 * ROLL_MAX;
+                roll_max = -1 * ROLL_MIN;
+            }
+            else
+            {
+                roll_min = ROLL_MIN;
+                roll_max = ROLL_MAX;
+            }
+            if (Util.isWithinRange(roll, roll_min, roll_max))
             {
                 this.Roll = roll;
             }
             else
             {
-                throw new ArgumentException(roll + " is outside of range (" + ROLL_MIN + ", " + ROLL_MAX + ")");
+                throw new ArgumentException(roll + " is outside of range (" + roll_min + ", " + roll_max + ")");
             }
         }
 
         public NaoElbow(SerializationInfo info, StreamingContext ctxt)
         {
-            this.Yaw = (double)info.GetValue("Yaw", typeof(double));
-            this.Roll = (double)info.GetValue("Roll", typeof(double));
+            this.Yaw = (float)info.GetValue("Yaw", typeof(float));
+            this.Roll = (float)info.GetValue("Roll", typeof(float));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext ctxt)

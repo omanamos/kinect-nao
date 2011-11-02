@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NaoKinectTest.HumanModel;
 using System.Runtime.Serialization;
 
 namespace DataStore
 {
     [Serializable]
-    public class NaoSkeleton : ISerializable
+    public class NaoSkeleton : ISerializable , ISkeleton
+
     {
         public NaoPosition Position { get; private set; }
         public NaoShoulder LeftShoulder { get; private set; }
@@ -75,6 +75,11 @@ namespace DataStore
 
             info.AddValue("LeftHand", LeftHand);
             info.AddValue("RightHand", RightHand);
+        }
+
+        public double[] toArray(bool useJointVals)
+        {
+            throw new NotImplementedException();
         }
     }
 }

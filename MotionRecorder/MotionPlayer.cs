@@ -39,6 +39,16 @@ namespace MotionRecorder
             playing = !playing;
         }
 
+        public void pause()
+        {
+            playing = false;
+        }
+
+        public void unpause()
+        {
+            playing = true;
+        }
+
         public void stop()
         {
             stopped = true;
@@ -82,9 +92,13 @@ namespace MotionRecorder
                     cur_ts = timestamps[idx];
                     Thread.Sleep((int)(cur_ts - prev_ts));
                     prev_ts = cur_ts;
-                    
                 }
             }
+        }
+
+        internal void seek(double p)
+        {
+            throw new NotImplementedException();
         }
     }
 
