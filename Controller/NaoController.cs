@@ -67,6 +67,10 @@ namespace Controller
         public void update(NaoSkeleton skeleton)
         {
             // TODO(namos): add in code to make the NAO walk
+            NaoPosition nao_pos = skeleton.Position;
+            NaoPosition nao_pos_prv = lastUpdate.Position;
+
+            proxy.walkTo(nao_pos.X - nao_pos_prv.X, nao_pos.Y - nao_pos_prv.Y, 0.0f);
             // TODO(namos): angleInterplation? to send multiple angles at once
             //proxy.angleInterpolation("", "", "", true);
 

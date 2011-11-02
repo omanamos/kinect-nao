@@ -7,13 +7,13 @@ namespace DataStore
 {
     public class NaoPosition
     {
-        public double X { get; private set; }
-        public double Y { get; private set; }
-        public double Z { get; private set; }
+        public float X { get; private set; }
+        public float Y { get; private set; }
+        public float Z { get; private set; }
 
         private NaoPosition() { }
 
-        public NaoPosition(double x, double y, double z)
+        public NaoPosition(float x, float y, float z)
         {
             this.X = x;
             this.Y = y;
