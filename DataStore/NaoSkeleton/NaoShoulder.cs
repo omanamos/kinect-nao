@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace DataStore
 {
-    public class NaoShoulder
+    [Serializable]
+    public class NaoShoulder : ISerializable
     {
         public static readonly float PITCH_MIN = -2.0856f;
         public static readonly float PITCH_MAX = 2.0856f;
@@ -51,6 +53,18 @@ namespace DataStore
             {
                 throw new ArgumentException(roll + " is outside of range (" + ROLL_MIN + ", " + ROLL_MAX + ")");
             }
+        }
+
+        public NaoShoulder(SerializationInfo info, StreamingContext ctxt)
+        {
+            this.Pitch = (float)info.GetValue("Pitch", typeof(float));
+            this.Roll = (float)info.GetValue("Roll", typeof(float));
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
+        {
+            info.AddValue("Pitch", Pitch);
+            info.AddValue("Roll", Roll);
         }
     }
 }

@@ -205,6 +205,7 @@ namespace Recognizer
 
             // Fit the model
             double likelihood = teacher.Run(sequences);
+
             ModelSerializer.serialize(hmm, "Z:\\WindowsFolders\\Desktop\\hmm.ser");
             HiddenMarkovModel<MultivariateNormalDistribution> hmm2 = ModelSerializer.deserialize("Z:\\WindowsFolders\\Desktop\\hmm.ser");
 
@@ -231,6 +232,9 @@ namespace Recognizer
             }
             double l1 = hmm.Evaluate(query1, false);
             Console.WriteLine("Likelihood: " + l1);
+            double l2c = hmm2.Evaluate(query1, false);
+            Console.WriteLine("Likelihood (should be same): " + l2c);
+
 
             double[][] query2 = emissionProbs.Generate(10);
             for (int i = 0; i < query2.GetLength(0); i++)

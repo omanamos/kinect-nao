@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace DataStore
 {
-    public class NaoSkeleton : ISkeleton
+    [Serializable]
+    public class NaoSkeleton : ISerializable , ISkeleton
+
     {
         public NaoPosition Position { get; private set; }
         public NaoShoulder LeftShoulder { get; private set; }
@@ -25,6 +28,8 @@ namespace DataStore
                 NaoElbow leftElbow, NaoElbow rightElbow,
                 NaoHand leftHand, NaoHand rightHand)
         {
+            this.Position = position;
+
             this.LeftShoulder = leftShoulder;
             this.RightShoulder = rightShoulder;
 
@@ -36,6 +41,40 @@ namespace DataStore
 
             this.LeftHand = leftHand;
             this.RightHand = rightHand;
+        }
+
+        public NaoSkeleton(SerializationInfo info, StreamingContext ctxt)
+        {
+            this.Position = (NaoPosition)info.GetValue("Position", typeof(NaoPosition));
+
+            this.LeftShoulder = (NaoShoulder)info.GetValue("LeftShoulder", typeof(NaoShoulder));
+            this.RightShoulder = (NaoShoulder)info.GetValue("RightShoulder", typeof(NaoShoulder));
+
+            this.LeftWrist = (NaoWrist)info.GetValue("LeftWrist", typeof(NaoWrist));
+            this.RightWrist = (NaoWrist)info.GetValue("RightWrist", typeof(NaoWrist));
+
+            this.LeftElbow = (NaoElbow)info.GetValue("LeftElbow", typeof(NaoElbow));
+            this.RightElbow = (NaoElbow)info.GetValue("RightElbow", typeof(NaoElbow));
+
+            this.LeftHand = (NaoHand)info.GetValue("LeftHand", typeof(NaoHand));
+            this.RightHand = (NaoHand)info.GetValue("RightHand", typeof(NaoHand));
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
+        {
+            info.AddValue("Position", Position);
+
+            info.AddValue("LeftShoulder", LeftShoulder);
+            info.AddValue("RightShoulder", RightShoulder);
+
+            info.AddValue("LeftWrist", LeftWrist);
+            info.AddValue("RightWrist", RightWrist);
+
+            info.AddValue("LeftElbow", LeftElbow);
+            info.AddValue("RightElbow", RightElbow);
+
+            info.AddValue("LeftHand", LeftHand);
+            info.AddValue("RightHand", RightHand);
         }
 
         public double[] toArray(bool useJointVals)

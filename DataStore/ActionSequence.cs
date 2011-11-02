@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace DataStore
 {
-    public class ActionSequence<T> where T : ISkeleton
+    [Serializable]
+    public class ActionSequence<T> where T : ISkeleton , ISerializable
     {
         private List<T> states;
         private int cur;
@@ -37,6 +39,18 @@ namespace DataStore
         public void reset()
         {
             this.cur = -1;
+        }
+
+        public ActionSequence(SerializationInfo info, StreamingContext ctxt)
+        {
+            this.states = (List<E>)info.GetValue("states", typeof(List<E>));
+            this.cur = (int)info.GetValue("cur", typeof(int));
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
+        {
+            info.AddValue("states", states);
+            info.AddValue("cur", cur);
         }
 
         /// <summary>
