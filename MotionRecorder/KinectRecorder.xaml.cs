@@ -45,6 +45,10 @@ namespace MotionRecorder
         int kinectPointsId = -1;
         private bool kinect_vis;
 
+        SliderManager beginPointManager, endPointManager;
+
+        private bool playControlLastDragged;
+
         #region window code
         public KinectRecorder()
         {
@@ -66,6 +70,11 @@ namespace MotionRecorder
                 new PlaybackProgressEventHandler(motion_player_PlaybackProgress);
 
             SetGUIMode(Modes.PLAY);
+
+            beginPointManager = new SliderManager(start_slider);
+            beginPointManager.ValueChanged += new SliderValueChangedEventHandler(beginPointManager_ValueChanged);
+            endPointManager = new SliderManager(end_slider);
+            endPointManager.ValueChanged += new SliderValueChangedEventHandler(endPointManager_ValueChanged);
             recording = false;
         }
 
@@ -245,17 +254,11 @@ namespace MotionRecorder
         #region playback
         private void play_Click(object sender, RoutedEventArgs e)
         {
+            playControlLastDragged = false;
+            playing = !playing;
             if (playing)
-            {
-                playing = false;
-                // pause
-                motion_player.togglePaused();
-            }
-            else
-            {
-                playing = true;
-                motion_player.togglePaused();
-            }
+                motion_player.seek(play_slider.Value);
+            motion_player.togglePaused();
         }
 
         private void updatePlaybackStatus()
@@ -263,6 +266,7 @@ namespace MotionRecorder
             List<double> ticks = new List<double>();
             if (currentMotionRecording == null || currentMotionRecording.getPointTimestamps().Count == 0)
             {
+                ticks = new List<double>();
                 play_slider.Ticks = new DoubleCollection(ticks);
                 play_slider.Value = 0;
                 play_slider.Minimum = 0;
@@ -278,7 +282,7 @@ namespace MotionRecorder
                 {
                     ticks.Add((double)l);
                 }
-            
+                play_slider.Ticks = new DoubleCollection(ticks);
                 play_slider.Minimum = ticks[0];
                 play_slider.Value = play_slider.Minimum;
                 play_slider.Maximum = ticks[ticks.Count - 1];
@@ -286,7 +290,7 @@ namespace MotionRecorder
             }
         }
 
-        void motion_player_PlaybackProgress(object sender, PlaybackProgressEventArgs e)
+        private void motion_player_PlaybackProgress(object sender, PlaybackProgressEventArgs e)
         {
             // Update the slider in the UI thread
             Action<Slider, double> act = new Action<Slider, double>(updateSlider);
@@ -295,12 +299,12 @@ namespace MotionRecorder
             showFrameAtTimestamp(e.Timestamp);
         }
 
-        void updateSlider(Slider s, double v)
+        private void updateSlider(Slider s, double v)
         {
             s.Value = v;
         }
 
-        void showFrameAtTimestamp(long timestamp)
+        private void showFrameAtTimestamp(long timestamp)
         {
             RecordingPoint pt = currentMotionRecording.getPointFromTimestamp(timestamp);
             if (playerPointsId != -1)
@@ -311,6 +315,35 @@ namespace MotionRecorder
             // And add the new ones, updating our id
             playerPointsId = gmt.showPoints(arrayToList(pt.Data));
         }
+
+        private void play_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (playControlLastDragged)
+            {
+                // Pause the playback
+                motion_player.pause();
+                // Show the given frame
+                showFrameAtTimestamp(Convert.ToInt64(e.NewValue));
+            }
+        }
+
+        private void play_slider_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
+        {
+            playControlLastDragged = true;
+        }
+
+        void endPointManager_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            // The end point of the sequence was updated, reload the sequence
+            throw new NotImplementedException();
+        }
+
+        void beginPointManager_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            // The beginning point of the sequence was updated, reload the sequence
+            throw new NotImplementedException();
+        }
+
 
         #endregion
    

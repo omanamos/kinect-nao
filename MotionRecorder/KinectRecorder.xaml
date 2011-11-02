@@ -37,7 +37,7 @@
                 <Button Name="play" Content="Play" Click="play_Click"
                         ToolTipService.ShowOnDisabled="True"
                         ToolTip="Select a recording path to enable"></Button>
-                <Slider Name="play_slider" MinWidth="450" IsEnabled="False"></Slider>
+                <Slider Name="play_slider" MinWidth="450" IsEnabled="False" ValueChanged="play_slider_ValueChanged" Thumb.DragStarted="play_slider_DragStarted"></Slider>
             </StackPanel>
             <Button Content="Save" Name="save_btn" Click="save_btn_Click" Width="80"></Button>
             <CheckBox Content="Show Live Kinect Output" Name="kinect_vis_enabled" Unchecked="kinect_vis_enabled_Unchecked" Checked="kinect_vis_enabled_Checked"></CheckBox>

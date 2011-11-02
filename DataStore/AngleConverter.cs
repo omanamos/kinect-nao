@@ -18,8 +18,10 @@ namespace DataStore
         {
             this.hk = hk;
             this.angles = new float[(int)NaoJointAngle.count];
+            getArmAngles();
         }
 
+        // The maximum and minum angles are limited by Nao's joints limitation
         private void getArmAngles() 
         {
             // Get Joint positisions
@@ -113,10 +115,9 @@ namespace DataStore
             return degree / 180 * PI;
         }
 
+        // return the a NaoSkeleton with given joints
         public NaoSkeleton getNaoSkeleton()
         {
-            getArmAngles();
-
             Joint center = hk.getJoint(JointID.HipCenter);
             NaoPosition position = new NaoPosition(center.x, center.y, center.z);
 
@@ -135,7 +136,18 @@ namespace DataStore
             return new NaoSkeleton(position, LShoulder, RShoulder, LWrist, RWrist, LElbow, RElbow, LHand, RHand);
         }
 
-        private enum NaoJointAngle
+        // return the angles of joints, use enum NajointAngle to get the corresponding values
+        public float[] getAngles()
+        {
+            float[] ang = new float[(int)NaoJointAngle.count];
+            for (int i = 0; i < (int)NaoJointAngle.count; i++)
+            {
+                ang[i] = this.angles[i];
+            }
+            return ang;
+        }
+
+        public enum NaoJointAngle
         {
             LShoulderPitch,
             RShoulderPitch,

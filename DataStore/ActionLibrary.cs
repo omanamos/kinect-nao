@@ -7,7 +7,7 @@ namespace DataStore
 {
     public class ActionLibrary
     {
-        private Dictionary<string, ActionSequence<NaoSkeleton>> actions;
+        private Dictionary<String, ActionSequence<NaoSkeleton>> actions;
 
         public ActionLibrary()
         {
