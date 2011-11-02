@@ -10,7 +10,7 @@ using DataStore;
 
 namespace Recognizer
 {
-    class HMMRecognizer
+    public class HMMRecognizer
     {
         List<HiddenMarkovModel<MultivariateNormalDistribution>> models;
         SequenceClassifier<MultivariateNormalDistribution> classifier;
