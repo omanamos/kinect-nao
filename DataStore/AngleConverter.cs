@@ -135,7 +135,17 @@ namespace DataStore
             return new NaoSkeleton(position, LShoulder, RShoulder, LWrist, RWrist, LElbow, RElbow, LHand, RHand);
         }
 
-        private enum NaoJointAngle
+        public float[] getAngles()
+        {
+            float[] ang = new float[(int)NaoJointAngle.count];
+            for (int i = 0; i < (int)NaoJointAngle.count; i++)
+            {
+                ang[i] = this.angles[i];
+            }
+            return ang;
+        }
+
+        public enum NaoJointAngle
         {
             LShoulderPitch,
             RShoulderPitch,
