@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace DataStore
 {
-    public class NaoElbow
+    [Serializable]
+    public class NaoElbow : ISerializable
     {
         public static readonly float YAW_MIN = -2.0856f;
         public static readonly float YAW_MAX = 2.0856f;
@@ -51,6 +53,18 @@ namespace DataStore
             {
                 throw new ArgumentException(roll + " is outside of range (" + roll_min + ", " + roll_max + ")");
             }
+        }
+
+        public NaoElbow(SerializationInfo info, StreamingContext ctxt)
+        {
+            this.Yaw = (float)info.GetValue("Yaw", typeof(float));
+            this.Roll = (float)info.GetValue("Roll", typeof(float));
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
+        {
+            info.AddValue("Yaw", Yaw);
+            info.AddValue("Roll", Roll);
         }
     }
 }

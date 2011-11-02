@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 using Aldebaran.Proxies;
 using DataStore;
@@ -12,7 +13,7 @@ namespace Controller
     public class NaoController
     {
         private static readonly float SPEED = 0.2f;
-
+        
         private MotionProxy proxy;
         private NaoSkeleton lastUpdate;
         private TextToSpeechProxy tts;
@@ -67,6 +68,14 @@ namespace Controller
         public void update(NaoSkeleton skeleton)
         {
             // TODO(namos): add in code to make the NAO walk
+            // Working on rotation angle
+            NaoPosition nao_pos = skeleton.Position;
+            NaoPosition nao_pos_prv = lastUpdate.Position;
+ //           Vector prv_shoulderToCenter = new Vector(1, 2);
+ //           Vector shoulderToCenter = new Vector(2, 1);
+//            Vector.AngleBetween(prv_shoulderToCenter, shoulderToCenter);
+            proxy.walkTo(nao_pos.X - nao_pos_prv.X, nao_pos.Y - nao_pos_prv.Y, 0.0f);
+            
             // TODO(namos): angleInterplation? to send multiple angles at once
             //proxy.angleInterpolation("", "", "", true);
 

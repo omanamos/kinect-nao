@@ -5,12 +5,14 @@ using System.Text;
 using System.Speech.Recognition;
 
 using DataStore;
+using Recognizer;
 
 namespace Controller
 {
     public class MainController
     {
         public static readonly String ACTION_LIB_PATH = "temp";
+        public static readonly String MODEL_LIB_PATH = "temp";
 
         private enum State { start, har, perform, learn };
         private State state;
@@ -22,6 +24,7 @@ namespace Controller
         private ActionLibrary lib;
 
         private ActionController nao;
+        private HMMRecognizer har;
         
         public MainController()
         {
@@ -142,6 +145,7 @@ namespace Controller
 
         private void init()
         {
+            this.har = new HMMRecognizer(MODEL_LIB_PATH);
             this.lib = ActionLibrary.load(ACTION_LIB_PATH);
             this.actions = new List<string>() { 
                 "walk forward", "walk backwards", "walk left", "walk right",

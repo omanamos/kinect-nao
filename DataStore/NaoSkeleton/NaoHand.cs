@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace DataStore
 {
-    public class NaoHand
+    [Serializable]
+    public class NaoHand : ISerializable
     {
         private bool opened;
 
@@ -19,6 +21,16 @@ namespace DataStore
         public bool isOpen()
         {
             return this.opened;
+        }
+
+        public NaoHand(SerializationInfo info, StreamingContext ctxt)
+        {
+            this.opened = (bool)info.GetValue("Opened", typeof(bool));
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
+        {
+            info.AddValue("Opened", opened);
         }
     }
 }
