@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Emgu.CV">
+      <HintPath>..\NaoKinectTest\bin\Debug\Emgu.CV.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Research.Kinect, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Microsoft Research KinectSDK\Microsoft.Research.Kinect.dll</HintPath>
@@ -50,6 +53,7 @@
     <Compile Include="ActionSequence.cs" />
     <Compile Include="AngleConverter.cs" />
     <Compile Include="HumanSkeleton.cs" />
+    <Compile Include="ISkeleton.cs" />
     <Compile Include="NaoSkeleton\NaoElbow.cs" />
     <Compile Include="NaoSkeleton\NaoHand.cs" />
     <Compile Include="NaoSkeleton\NaoPosition.cs" />

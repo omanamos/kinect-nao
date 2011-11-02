@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DataStore
 {
-    public class NaoSkeleton
+    public class NaoSkeleton : ISkeleton
     {
         public NaoPosition Position { get; private set; }
         public NaoShoulder LeftShoulder { get; private set; }
@@ -36,6 +36,11 @@ namespace DataStore
 
             this.LeftHand = leftHand;
             this.RightHand = rightHand;
+        }
+
+        public double[] toArray(bool useJointVals)
+        {
+            throw new NotImplementedException();
         }
     }
 }

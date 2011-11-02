@@ -18,8 +18,8 @@ namespace DataStore
             this.joints = new Dictionary<JointID, Joint>();
             for (int i = 0; i < (line.Length - 1) / 3; i++)
             {
-                joints.Add(RealKinect.JOINT_ORDERING[i], new Joint(double.Parse(line[1 + 3 * i]), 
-                        double.Parse(line[2 + 3 * i]), double.Parse(line[3 + 3 * i])));
+                joints.Add(RealKinect.JOINT_ORDERING[i], new Joint(float.Parse(line[1 + 3 * i]), 
+                        float.Parse(line[2 + 3 * i]), float.Parse(line[3 + 3 * i])));
             }            
         }
 
@@ -31,11 +31,11 @@ namespace DataStore
 
     public class Joint
     {
-        public readonly double x;
-        public readonly double y;
-        public readonly double z;
+        public readonly float x;
+        public readonly float y;
+        public readonly float z;
 
-        public Joint(double x, double y, double z)
+        public Joint(float x, float y, float z)
         {
             this.x = x;
             this.y = y;
