@@ -34,7 +34,7 @@ namespace Recognizer
                 // read each line...
             }
             
-            return h;
+            return null;
         }
     }
 }
