@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using DataStore;
+using Aldebaran.Proxies;
 
 namespace NaoPlayer
 {
@@ -11,7 +12,7 @@ namespace NaoPlayer
     {
         static void Main(string[] args)
         {
-            string filename = "Z:/WindowsFolders/Desktop/waveleft/wave left1.rec";
+            string filename = "E:/Document/11Autumn/CSE481c/kinect-nao/recordings/waveleft/wave left1.rec";
 
             List<HumanSkeleton> seq = new List<HumanSkeleton>();
             using (StreamReader s = new StreamReader(filename))
@@ -22,21 +23,46 @@ namespace NaoPlayer
                 }
             }
 
-            List<NaoSkeleton> naoSeq = new List<NaoSkeleton>();
+            List<float[]> naoSeq = new List<float[]>();
             foreach (HumanSkeleton h in seq)
             {
                 AngleConverter ac = new AngleConverter(h);
-                NaoSkeleton ns = ac.getNaoSkeleton();
-                naoSeq.Add(ns);
+                naoSeq.Add(ac.getAngles());
             }
-            ActionSequence<NaoSkeleton> naoActs = new ActionSequence<NaoSkeleton>(naoSeq);
             bool isJointAction = true; // false if is a walking action
-            ExecuteOnNao(naoActs, isJointAction);
+            ExecuteOnNao(naoSeq, isJointAction);
         }
 
-        static void ExecuteOnNao(ActionSequence<NaoSkeleton> actSeq, bool isJointAction)
+        static void ExecuteOnNao(List<float[]> naoSeq, bool isJointAction)
         {
+            MotionProxy mp = new MotionProxy("127.0.0.1", 9559);
             // do stuff with naoskeletons and real NAO
+            foreach (float[] act in naoSeq) {
+
+                float LShoulderRoll = act[(int)AngleConverter.NaoJointAngle.LShoulderRoll];
+                float LShoulderPitch = act[(int)AngleConverter.NaoJointAngle.LShoulderPitch];
+                float LElbowYaw = act[(int)AngleConverter.NaoJointAngle.LElbowYaw];
+                float LElbowRoll = act[(int)AngleConverter.NaoJointAngle.LElbowRoll];
+                Console.WriteLine("LShoulderRoll: " + LShoulderRoll);
+                Console.WriteLine("LShoulderPitch: " + LShoulderPitch);
+ /*               mp.setAngles("LElbowYaw", LElbowYaw, 0.4f);
+                mp.setAngles("LElbowRoll", LElbowRoll, 0.4f);
+                mp.setAngles("LShoulderRoll", LShoulderRoll, 0.4f);
+                mp.setAngles("LShoulderPitch", LShoulderPitch, 0.4f);*/
+                String[] joints = new String[(int)AngleConverter.NaoJointAngle.count];
+                joints[(int)AngleConverter.NaoJointAngle.LElbowRoll] = "LElbowRoll";
+                joints[(int)AngleConverter.NaoJointAngle.LElbowYaw] = "LElbowYaw";
+                joints[(int)AngleConverter.NaoJointAngle.LShoulderPitch] = "LShoulderPitch";
+                joints[(int)AngleConverter.NaoJointAngle.LShoulderRoll] = "LShoulderRoll";
+                joints[(int)AngleConverter.NaoJointAngle.RElbowRoll] = "RElbowRoll";
+                joints[(int)AngleConverter.NaoJointAngle.RElbowYaw] = "RElbowYaw";
+                joints[(int)AngleConverter.NaoJointAngle.RShoulderPitch] = "RShoulderPitch";
+                joints[(int)AngleConverter.NaoJointAngle.RShoulderRoll] = "RShoulderRoll";
+
+                mp.angleInterpolationWithSpeed(joints, act, 0.3f);
+                System.Threading.Thread.Sleep(50);
+            }
+            Console.Read();
         }
 
     }

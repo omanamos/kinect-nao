@@ -74,16 +74,16 @@ namespace DataStore
             // Elbow Roll
             Vector3D RElbowToWrist = new Vector3D(elbowR.x - wristR.x, elbowR.y - wristR.y, elbowR.z - wristR.z);
             float RElbowRollAng = toRadian((float)Vector3D.AngleBetween(RShoulderToElbow, RElbowToWrist));
-            if (RElbowRollAng >= 1.57)
-                RElbowRollAng = 1.57f;
+            if (RElbowRollAng >= 1.53f)
+                RElbowRollAng = 1.53f;
             else if (RElbowRollAng <= 0)
                 RElbowRollAng = 0;
             this.angles[(int)NaoJointAngle.RElbowRoll] = RElbowRollAng;
 
             Vector3D LElbowToWrist = new Vector3D(elbowL.x - wristL.x, elbowL.y - wristL.y, elbowL.z - wristL.z);
             float LElbowRollAng = toRadian((float)Vector3D.AngleBetween(LShoulderToElbow, LElbowToWrist)) * -1;
-            if (LElbowRollAng <= -1.57)
-                LElbowRollAng = -1.57f;
+            if (LElbowRollAng <= -1.53)
+                LElbowRollAng = -1.53f;
             else if (LElbowRollAng >= 0)
                 LElbowRollAng = 0;
             this.angles[(int)NaoJointAngle.LElbowRoll] = LElbowRollAng;

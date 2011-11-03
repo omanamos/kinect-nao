@@ -26,13 +26,13 @@ namespace DataStore
         {
             if (leftSide)
             {
-                ROLL_MIN = -0.3142f;
+                ROLL_MIN = 0.3142f;
                 ROLL_MAX = 1.3265f;
             }
             else
             {
                 ROLL_MIN = -1.3265f;
-                ROLL_MAX = 0.3142f;
+                ROLL_MAX = -0.3142f;
             }
             ROLL_RANGE = ROLL_MAX - ROLL_MIN;
 
