@@ -20,7 +20,9 @@ using Accord.Statistics.Distributions.Fitting;
 using MotionRecorder;
 using System.IO;
 using DataStore;
-using NaoController;
+using Recognizer;
+using System.Threading;
+using System.Timers;
 
 namespace Recognizer
 {
@@ -113,12 +115,12 @@ namespace Recognizer
                 // convert it into an actionSequence of humanskeletons
                 ActionSequence<HumanSkeleton> actSeq = new ActionSequence<HumanSkeleton>(seq);
                 // Convert that actionSequence in to a double[][]
-                bool useJointVals = shouldUseJVals(actName);
+                bool useJointVals = Util.shouldUseJVals(actName);
                 double[][] trainSeq = actSeq.toArray(useJointVals);
                 // add that to the sequences array
                 sequences[i] = trainSeq;
             }
-            bool doTrain = false;
+            bool doTrain = true;
             if (doTrain)
             {
                 if (datafiles.Count > 0)
@@ -132,7 +134,7 @@ namespace Recognizer
             }
             else
             {
-                SerializableHmm ser = new SerializableHmm("walk forward");
+                SerializableHmm ser = new SerializableHmm("wave right");
                 HiddenMarkovModel<MultivariateNormalDistribution> hmm = ser.LoadFromDisk();
 
                 foreach (double[][] seq in sequences)
@@ -141,9 +143,6 @@ namespace Recognizer
                     Console.WriteLine("Likelihood: " + l);
                 }
             }
-
-            /*
-            */
             
         }
 
@@ -163,9 +162,9 @@ namespace Recognizer
                 new BaumWelchLearning<MultivariateNormalDistribution>(hmm)
                 {
                     Tolerance = 0.0001,
-                    Iterations = 0,
+                    Iterations = 500,
                     // Specify a regularization constant
-                    FittingOptions = new NormalOptions() { Regularization = 1e-5 }
+                    FittingOptions = new NormalOptions() { Regularization = 1e-4 }
                 };
 
             // Train the hmm
@@ -173,136 +172,74 @@ namespace Recognizer
             return hmm;
         }
 
-        private bool shouldUseJVals(string actName)
-        {
-            switch (actName)
-            {
-                case "waveright":
-                case "waveleft":
-                case "raisetheroof":
-                case "macarena":
-                    return true;
-                case "walkforward":
-                case "walkbackward":
-                case "walkleft":
-                case "walkright":
-                default:
-                    return false;
-            }
-        }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             
             List<string> train_files = new List<string>();
             
+            /*
+            for (int i = 1; i <= 5; i++)
+            {
+                train_files.Add(@"Z:/WindowsFolders/Desktop/raisetheroof/raise the roof" + i + ".rec");
+            }
+            */
             
             for (int i = 1; i <= 10; i++)
             {
-                train_files.Add(@"Z:/WindowsFolders/Desktop/walk forward" + i + ".rec");
+                train_files.Add(@"Z:/WindowsFolders/Desktop/waveleft/wave left" + i + ".rec");
             }
             
-            
+            /*
             train_files.Add(@"Z:/WindowsFolders/Desktop/walk forward11.rec");
             train_files.Add(@"Z:/WindowsFolders/Desktop/walk forward12.rec");
             train_files.Add(@"Z:/WindowsFolders/Desktop/walk forward13.rec");
-            
+            */
+
             train(train_files);
-
-             /*
-            var emissionProbs =
-                new MultivariateNormalDistribution(4);
-            // Creates a continuous hidden Markov Model with two states organized in a forward
-            //  topology and an underlying univariate Normal distribution as probability density.
-            var hmm = new HiddenMarkovModel<MultivariateNormalDistribution>(
-                    new Forward(8), emissionProbs);
-            // Configure the learning algorithms to train the sequence classifier until the
-            // difference in the average log-likelihood changes only by as little as 0.0001
-            var teacher =
-                new BaumWelchLearning<MultivariateNormalDistribution>(hmm)
-                {
-                    Tolerance = 0.0001,
-                    Iterations = 0,
-                    // Specify a regularization constant
-                    FittingOptions = new NormalOptions() { Regularization = 1e-5 }
-                };
-
-          
-            
-
-            // 10 sequences, each of 100pts, in 4 dimensions
-            int nseqs = 100;
-            double[][][] sequences = new double[nseqs][][];//, 100, 4];
-
-            for (int i = 0; i < nseqs; i++)
-            {
-                // Fill the sequence with random numbers
-                sequences[i] = emissionProbs.Generate(10);
-
-                //sequences[i] = new double[10][];
-
-                // First dimension should linearly increase
-                for (int j = 0; j < 10; j++)
-                {
-                    //sequences[i][j] = new double[4];
-                    sequences[i][j][0] = j;
-                    sequences[i][j][1] *= 10;
-                    sequences[i][j][2] *= 10;
-                    sequences[i][j][3] *= 10;
-                }
-            }
-
-            // Fit the model
-            double likelihood = teacher.Run(sequences);
-            SerializableHmm h = new SerializableHmm("myname", hmm);
-            h.SaveToDisk();
-            //ModelSerializer.serialize(hmm, "Z:\\WindowsFolders\\Desktop\\hmm.ser");
-            // = ModelSerializer.deserialize("Z:\\WindowsFolders\\Desktop\\hmm.ser");
-
-            SerializableHmm h2 = new SerializableHmm("myname");
-            HiddenMarkovModel<MultivariateNormalDistribution> hmm2 = h2.LoadFromDisk();
-
-            Console.WriteLine("Average LL for training sequences: " + likelihood);
-            double[][] query1 = emissionProbs.Generate(10);
-            for (int i = 0; i < query1.GetLength(0); i++)
-            {
-                query1[i][0] = i;
-                query1[i][1] *= 10;
-                query1[i][2] *= 10;
-                query1[i][3] *= 10;
-            }
-            foreach (var em in hmm.Emissions)
-            {
-                foreach (var m in em.Mean)
-                {
-                    Console.Write(m + " ");
-                }
-                foreach (var v in em.Variance)
-                {
-                    Console.Write(v + " ");
-                }
-                Console.WriteLine();
-            }
-            double l1 = hmm.Evaluate(query1, false);
-            Console.WriteLine("Likelihood: " + l1);
-            double l1c = hmm2.Evaluate(query1, false);
-            Console.WriteLine("Likelihood: " + l1c);
-
-            double[][] query2 = emissionProbs.Generate(10);
-            for (int i = 0; i < query2.GetLength(0); i++)
-            {
-                query2[i][0] = i;
-                query2[i][1] *= 10;
-                query2[i][1] += 0.00001;
-                query2[i][2] *= 10;
-                query2[i][3] *= 10;
-            }
-
-
-            double l2 = hmm.Evaluate(query2, false);
-            Console.WriteLine("Likelihood: " + l2);
-            Console.ReadKey();
-              * */
+            /*
+            t.Elapsed += new ElapsedEventHandler(t_Elapsed);
+            t.Start();*/
         }
+
+        void t_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            recognize();
+        }
+        System.Timers.Timer t = new System.Timers.Timer(1000 / 30);
+        HMMRecognizer rec = new HMMRecognizer(@"Z:/WindowsFolders/MyDocs/Capstone/NaoKinectTest/Recognizer/HmmData");
+        // start thread creating actionSequences
+        KinectSequencer sequencer = new KinectSequencer();
+        bool gotAction = false;
+        string act = "";
+        private void recognize()
+        {
+            if (!gotAction)
+            {
+                // if there is a sequence available
+                if (sequencer.SequenceAvailable)
+                {
+                    // grab the latest sequence
+                    ActionSequence<HumanSkeleton> seq = sequencer.getLatestSequence();
+                    // perform recognition
+                    Tuple<string, double> guess = rec.recognizeAction(seq);
+                    act = guess.Item1;
+                    Console.WriteLine("Action: " + act + " L: " + guess.Item2);
+                    Dispatcher.BeginInvoke(new Action(
+                        delegate(){ 
+                            action.Text = act;
+                            score.Text = guess.Item2.ToString();
+                            if (act == "")
+                            {
+                                score.Foreground = new SolidColorBrush(Colors.Red);
+                            }
+                            else
+                            {
+                                score.Foreground = new SolidColorBrush(Colors.Green);
+                            }
+                        }));
+                }
+            }
+        }
+
     }
 }

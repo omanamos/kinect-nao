@@ -26,7 +26,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Accord.Statistics.Models.Markov;
 using Accord.Statistics.Distributions.Multivariate;
 
-namespace NaoController
+namespace Recognizer
 {
     [Serializable()]
     class SerializableHmm : ISerializable
