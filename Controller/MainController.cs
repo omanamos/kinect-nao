@@ -14,8 +14,9 @@ namespace Controller
         public static readonly String ACTION_LIB_PATH = "temp";
         public static readonly String MODEL_LIB_PATH = "temp";
 
-        private enum State { start, har, perform, learn };
+        private enum State { start, har, perform, learn, listenForNewName, confirmation };
         private State state;
+        private State prevState;
         private VoiceRecogition recog;
 
         private Dictionary<State, Mapping> map;
@@ -35,21 +36,25 @@ namespace Controller
                     "watch me", "perform this", "learn this", "exit" });
             map[State.har] = new Mapping("nao", new List<string>() { "go back" });
             map[State.perform] = new Mapping("perform", new List<string>(actions) { "go back" });
-            map[State.learn] = new Mapping("nao", new List<string>(actions) { "go back", "restart" });
+            map[State.learn] = new Mapping("nao", new List<string>(actions) { "go back", "restart",
+                "save"});
+            map[State.listenForNewName] = new Mapping("it is named");
+            map[State.confirmation] = new Mapping("confirm", new List<string>() { "yes", "no" });
 
-            //this.nao = new ActionController();
+            this.nao = new ActionController();
 
             switchStates(State.start);
         }
 
         private void switchStates(State state)
         {
+            this.prevState = this.state;
             this.state = state;
             if (this.recog != null)
             {
                 this.recog.exit();
             }
-            this.recog = new VoiceRecogition(map[state].prefix, map[state].list, this);
+            this.recog = new VoiceRecogition(map[state], this);
         }
 
         public void processCommand(string command)
@@ -57,8 +62,8 @@ namespace Controller
             Mapping mapping = map[this.state];
             if (!mapping.contains(command))
             {
+                this.nao.speak(command + " isn't a valid command");
                 Console.WriteLine("\"" + command + "\" is not a valid command");
-                // TODO(namos): make the NAO say an error
             }
             else
             {
@@ -72,20 +77,33 @@ namespace Controller
                     case State.learn:
                         if (suffix.Equals("go back"))
                         {
-                            // TODO(namos): add action sequence to library
-                            Console.WriteLine("Added Sequence");
-                            this.switchStates(State.start);
+                            this.nao.speak("Are you sure you want to cancel learning this action?");
+                            this.switchStates(State.confirmation);
+                        }
+                        else if (suffix.Equals("save"))
+                        {
+                            Console.WriteLine("What should this new sequence be called?");
+                            this.nao.speak("What should this new sequence be called?");
+                            this.switchStates(State.listenForNewName);
                         }
                         else if (suffix.Equals("restart"))
                         {
                             Console.WriteLine("Restarting...");
-                            // TODO(namos): clear cached action sequences from library
+                            this.nao.speak("Starting over");
+                            this.lib.clearCache();
                         }
                         else
                         {
                             Console.WriteLine("Nao perform: " + suffix);
-                            // TODO(namos): have nao perform action
+                            ActionSequence<NaoSkeleton> seq = this.lib.getSequence(suffix);
+                            this.lib.appendToCache(seq);
+                            this.nao.runAction(seq);
                         }
+                        break;
+                    case State.listenForNewName:
+                        this.switchStates(State.confirmation);
+                        this.nao.speak("is " + suffix + " the correct name?");
+                        this.lib.setCachedName(suffix);
                         break;
                     case State.perform:
                         if (suffix.Equals("go back"))
@@ -96,7 +114,7 @@ namespace Controller
                         else
                         {
                             Console.WriteLine("Nao perform: " + suffix);
-                            // TODO(namos): have nao perform action
+                            this.nao.runAction(this.lib.getSequence(suffix));
                         }
                         break;
                     case State.har:
@@ -104,6 +122,54 @@ namespace Controller
                         {
                             Console.WriteLine("Going back");
                             this.switchStates(State.start);
+                        }
+                        break;
+                    case State.confirmation:
+                        if (suffix.Equals("yes"))
+                        {
+                            switch (this.prevState)
+                            {
+                                case State.start:
+                                    this.nao.speak("Ok, I'm exiting");
+                                    this.exit();
+                                    break;
+                                case State.learn:
+                                    this.nao.speak("Ok, I won't learn this action");
+                                    this.lib.clearCache();
+                                    this.switchStates(State.start);
+                                    break;
+                                case State.listenForNewName:
+                                    if (this.lib.saveCache())
+                                    {
+                                        this.nao.speak("Ok, I saved the new action called "
+                                            + this.lib.getCachedName());
+                                    }
+                                    else
+                                    {
+                                        this.nao.speak("You didn't record anything, I'm not going"
+                                            + " to save an empty action silly");
+                                    }
+                                    this.switchStates(State.start);
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            switch (this.prevState)
+                            {
+                                case State.start:
+                                    this.nao.speak("Ok, I won't exit");
+                                    this.switchStates(State.start);
+                                    break;
+                                case State.learn:
+                                    this.nao.speak("Ok, keep teaching me");
+                                    this.switchStates(State.learn);
+                                    break;
+                                case State.listenForNewName:
+                                    this.nao.speak("Ok, what is it really called?");
+                                    this.switchStates(State.listenForNewName);
+                                    break;
+                            }
                         }
                         break;
                 }
@@ -121,25 +187,26 @@ namespace Controller
             }
             else if (suffix.Equals("listen"))
             {
-                Console.WriteLine("I'm listening");
+                Console.WriteLine("What do you want me to do?");
                 this.switchStates(State.perform);
-                // TODO(namos): have Nao say "What do you want me to do?"
+                this.nao.speak("What do you want me to do?");
             }
             else if (suffix.Equals("learn this"))
             {
                 Console.WriteLine("Teach me");
-                // TODO(namos): Nao say begin
                 this.switchStates(State.learn);
+                this.nao.speak("Ok, I'm ready");
             }
             else if (suffix.Equals("exit"))
             {
-                Console.WriteLine("exit");
-                this.exit();
+                Console.WriteLine("Confirm exit please!");
+                this.nao.speak("Are you sure you want to exit?");
+                this.switchStates(State.confirmation);
             }
             else
             {
-                Console.WriteLine("Error: " + suffix);
-                // TODO(namos): have Nao say error message
+                this.nao.speak(suffix + " isn't a valid command");
+                Console.WriteLine("\"" + suffix + "\" is not a valid command");
             }
         }
 
@@ -147,37 +214,36 @@ namespace Controller
         {
             this.har = new HMMRecognizer(MODEL_LIB_PATH);
             this.lib = ActionLibrary.load(ACTION_LIB_PATH);
-            this.actions = new List<string>() { 
-                "walk forward", "walk backwards", "walk left", "walk right",
-                "wave right", "wave left", "raise the roof", "do the macarena"
-            };
-            this.state = State.start;
-            // load actions
-            // load model library
-            // load action library
+            this.actions = new List<string>(this.lib.getActionNames());
         }
 
         public void exit()
         {
             this.save();
             this.recog.exit();
-            //this.nao.exit();
+            this.nao.exit();
             Environment.Exit(0);
         }
 
         private void save()
         {
-            // save model library
-            // save action library
+            this.lib.save(ACTION_LIB_PATH);
         }
 
-        private class Mapping {
+        public class Mapping {
             public readonly string prefix;
+            public readonly bool useDictation;
             public readonly List<string> list;
             private HashSet<string> lookup;
 
             private Mapping() {}
 
+            public Mapping(string prefix)
+            {
+                this.prefix = prefix;
+                this.useDictation = true;
+            }
+            
             public Mapping(string prefix, List<string> list)
             {
                 this.prefix = prefix;

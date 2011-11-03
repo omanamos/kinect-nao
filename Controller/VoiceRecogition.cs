@@ -11,7 +11,7 @@ namespace Controller
         private SpeechRecognitionEngine recogEng;
         private MainController controller;
 
-        public VoiceRecogition(string prefix, List<string> list, MainController controller)
+        public VoiceRecogition(Controller.MainController.Mapping mapping, MainController controller)
         {
             this.controller = controller;
             this.recogEng = new SpeechRecognitionEngine();
@@ -21,7 +21,7 @@ namespace Controller
             recogEng.SpeechRecognitionRejected += new EventHandler<SpeechRecognitionRejectedEventArgs>(
                     speechRecog_failure);
 
-            recogEng.LoadGrammar(CreateSampleGrammar(prefix, list));
+            recogEng.LoadGrammar(CreateSampleGrammar(mapping));
             this.start();
         }
 
@@ -46,16 +46,24 @@ namespace Controller
             recogEng.RecognizeAsyncStop();
         }
 
-        private Grammar CreateSampleGrammar(string prefix, List<string> list)
+        private Grammar CreateSampleGrammar(Controller.MainController.Mapping mapping)
         {
-            Choices choices = new Choices();
-            foreach (string choice in list) {
-                choices.Add(choice);
+            GrammarBuilder grammarBuilder = new GrammarBuilder(mapping.prefix);
+            if (mapping.useDictation)
+            {
+                grammarBuilder.AppendDictation();
             }
-            GrammarBuilder grammarBuilder = new GrammarBuilder(prefix);
-            grammarBuilder.Append(choices);
+            else
+            {
+                Choices choices = new Choices();
+                foreach (string choice in mapping.list)
+                {
+                    choices.Add(choice);
+                }
+                grammarBuilder.Append(choices);
+            }
             Grammar g = new Grammar(grammarBuilder);
-            g.Name = "Start Commands";
+            g.Name = "Commands";
             return g;
         }
     }

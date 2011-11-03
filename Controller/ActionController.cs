@@ -26,6 +26,11 @@ namespace Controller
             t.Join();
         }
 
+        public void speak(String context)
+        {
+            this.nao.speak(context);
+        }
+
         public void exit()
         {
             nao.exit();

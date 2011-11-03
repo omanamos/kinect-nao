@@ -12,6 +12,7 @@ namespace Controller
 {
     public class NaoController
     {
+        private readonly string ip;
         private static readonly float SPEED = 0.2f;
         
         private MotionProxy proxy;
@@ -22,6 +23,7 @@ namespace Controller
         {
             try
             {
+                this.ip = ip;
                 lastUpdate = null;
                 proxy = new MotionProxy(ip, 9559);
                 this.setStiffness(1.0f);
@@ -137,9 +139,10 @@ namespace Controller
             //proxy.setAngles("LHand", (float)skeleton.LeftHand.isOpen(), SPEED);
             //proxy.setAngles("RHand", (float)skeleton.RightHand.isOpen(), SPEED);
         }
-        public void speak(String context, string ip)
+
+        public void speak(String context)
         {
-            tts = new TextToSpeechProxy(ip, 9559);
+            tts = new TextToSpeechProxy(this.ip, 9559);
             tts.say(context);
         }
     }

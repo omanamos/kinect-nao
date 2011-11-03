@@ -12,15 +12,49 @@ namespace DataStore
     public class ActionLibrary : ISerializable
     {
         private Dictionary<String, ActionSequence<NaoSkeleton>> actions;
+        private ActionSequence<NaoSkeleton> cachedStates;
+        private String cachedName;
 
         public ActionLibrary()
         {
             this.actions = new Dictionary<string, ActionSequence<NaoSkeleton>>();
         }
 
-        public Dictionary<string, ActionSequence<NaoSkeleton>>.KeyCollection getCommands()
+        public Dictionary<string, ActionSequence<NaoSkeleton>>.KeyCollection getActionNames()
         {
             return this.actions.Keys;
+        }
+
+        public bool saveCache()
+        {
+            if (this.cachedName != null && !this.cachedStates.isEmpty())
+            {
+                this.actions[this.cachedName] = this.cachedStates;
+                this.clearCache();
+                return true;
+            }
+            return false;
+        }
+
+        public String getCachedName()
+        {
+            return this.cachedName;
+        }
+
+        public void setCachedName(String name)
+        {
+            this.cachedName = name;
+        }
+
+        public void appendToCache(ActionSequence<NaoSkeleton> action)
+        {
+            this.cachedStates.append(action);
+        }
+
+        public void clearCache()
+        {
+            this.cachedName = null;
+            this.cachedStates = new ActionSequence<NaoSkeleton>();
         }
 
         public void mapAction(string name, ActionSequence<NaoSkeleton> seq)

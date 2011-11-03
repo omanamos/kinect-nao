@@ -12,7 +12,11 @@ namespace DataStore
         private List<T> states;
         private int cur;
 
-        private ActionSequence() { }
+        public ActionSequence()
+        {
+            this.cur = -1;
+            this.states = new List<T>();
+        }
 
         public ActionSequence(List<T> states)
         {
@@ -20,9 +24,22 @@ namespace DataStore
             this.states = states;
         }
 
+        public void append(ActionSequence<T> other)
+        {
+            while (other.hasNext())
+            {
+                this.states.Add(other.next());
+            }
+        }
+
+        public bool isEmpty()
+        {
+            return this.states.Count > 0
+        }
+
         public bool hasNext()
         {
-            return this.cur != states.Count;
+            return this.cur != states.Count && this.states.Count > 0;
         }
 
         public T current()
