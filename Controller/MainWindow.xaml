@@ -2,7 +2,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
-    <Grid>
-        
-    </Grid>
+    <StackPanel>
+        <TextBox Name="currentState" Height="94" FontSize="36"></TextBox>
+        <TextBox Name="prefix" FontSize="36"></TextBox>
+        <ListBox Name="availableCommands" FontSize="24">
+        </ListBox>
+    </StackPanel>
 </Window>

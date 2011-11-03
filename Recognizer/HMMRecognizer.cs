@@ -48,7 +48,7 @@ namespace Recognizer
                     bool isJointAction = Util.shouldUseJVals(actName);
                     
                     // Deserialize the model and add it to the correct classifier
-                    SerializableHmm serMod = new SerializableHmm(actName);
+                    SerializableHmm serMod = new SerializableHmm(actName, modelDirectoryName);
                     HiddenMarkovModel<MultivariateNormalDistribution> hmm = serMod.LoadFromDisk();
                     if (isJointAction)
                     {

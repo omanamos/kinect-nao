@@ -42,6 +42,7 @@ namespace Controller
         private void setStiffness(float stiffness)
         {
             float time = 1.0f;
+            /*
             String[] joints = {"HeadYaw", "HeadPitch",
                                   "LShoulderPitch", "RShoulderPitch",
                                   "LShoulderRoll", "RShoulderRoll",
@@ -63,7 +64,7 @@ namespace Controller
                                 time, time, time, time};
 
             proxy.stiffnessInterpolation(joints, stiff, times);
-            /*
+             * 
             proxy.stiffnessInterpolation("Head", stiffness, time);
             proxy.stiffnessInterpolation("LShoulderPitch", stiffness, time);
             proxy.stiffnessInterpolation("RShoulderPitch", stiffness, time);
@@ -104,7 +105,7 @@ namespace Controller
                                  skeleton.LeftElbow.Yaw, skeleton.RightElbow.Yaw, 
                                  skeleton.LeftElbow.Roll, skeleton.RightElbow.Roll};
 
-            proxy.angleInterpolationWithSpeed(angleTypes, angles, SPEED);
+            //proxy.angleInterpolationWithSpeed(angleTypes, angles, SPEED);
             /*
             //Shoulder Angles
             proxy.setAngles("LShoulderPitch", (float)skeleton.LeftShoulder.Pitch, SPEED);

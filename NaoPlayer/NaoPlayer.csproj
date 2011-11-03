@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="naoqidotnetvc90">
-      <HintPath>C:\Program Files\Aldebaran\NAOqi.Net SDK 1.10.44\naoqidotnetvc90.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\Aldebaran\NAOqi.Net SDK 1.10.44\naoqidotnetvc90.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -50,6 +50,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Controller\Controller.csproj">
+      <Project>{CFBEB7F7-6D6E-4983-BC98-3ADF2309D683}</Project>
+      <Name>Controller</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DataStore\DataStore.csproj">
       <Project>{27EDAA3C-55A5-470D-9316-0A4881C417A5}</Project>
       <Name>DataStore</Name>

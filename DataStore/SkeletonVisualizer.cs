@@ -9,7 +9,7 @@ namespace DataStore
     public class SkeletonVisualizer
     {
         // Our visualizer thread
- /*       Visualizer.GameManagerThread gmt = new Visualizer.GameManagerThread();
+        Visualizer.GameManagerThread gmt = new Visualizer.GameManagerThread();
         private int kinectPointsId;
 
         public SkeletonVisualizer()
@@ -34,5 +34,5 @@ namespace DataStore
         {
             gmt.stop();
         }
-*/    }
+    }
 }

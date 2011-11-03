@@ -11,8 +11,8 @@ namespace Controller
 {
     public class MainController
     {
-        public static readonly String ACTION_LIB_PATH = "temp";
-        public static readonly String MODEL_LIB_PATH = "temp";
+        public static readonly String ACTION_LIB_PATH = "Z:/dev/kinect-nao/DataStore/lib.data";
+        public static readonly String MODEL_LIB_PATH = "Z:/dev/kinect-nao/Recognizer/HmmData/";
 
         private enum State { start, har, perform, learn, listenForNewName, confirmation };
         private State state;
@@ -26,9 +26,11 @@ namespace Controller
 
         private ActionController nao;
         private HMMRecognizer har;
+        private MainWindow window;
         
-        public MainController()
+        public MainController(MainWindow window)
         {
+            this.window = window;
             init();
 
             map = new Dictionary<State, Mapping>();
@@ -48,6 +50,16 @@ namespace Controller
 
         private void switchStates(State state)
         {
+            window.Dispatcher.BeginInvoke(new Action(
+                delegate()
+                {
+                    window.currentState.Text = state.ToString();
+                    window.availableCommands.Items.Clear();
+                    foreach (string s in map[state].list)
+                        window.availableCommands.Items.Add(s);
+                    window.prefix.Text = map[state].prefix;
+                }));
+
             this.prevState = this.state;
             this.state = state;
             if (this.recog != null)
@@ -62,7 +74,7 @@ namespace Controller
             Mapping mapping = map[this.state];
             if (!mapping.contains(command))
             {
-                this.nao.speak(command + " isn't a valid command");
+                this.nao.speak(command + " isn't a valid command you idiot");
                 Console.WriteLine("\"" + command + "\" is not a valid command");
             }
             else

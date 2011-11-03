@@ -18,6 +18,8 @@ namespace DataStore
         public ActionLibrary()
         {
             this.actions = new Dictionary<string, ActionSequence<NaoSkeleton>>();
+            this.cachedStates = new ActionSequence<NaoSkeleton>();
+            this.cachedName = null;
         }
 
         public Dictionary<string, ActionSequence<NaoSkeleton>>.KeyCollection getActionNames()

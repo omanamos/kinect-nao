@@ -15,7 +15,7 @@ namespace Controller
 
         public ActionController()
         {
-            this.nao = new NaoController("127.0.0.1");
+            this.nao = new NaoController("128.208.4.225");
         }
 
         public void runAction(ActionSequence<NaoSkeleton> action)

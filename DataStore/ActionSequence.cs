@@ -32,14 +32,19 @@ namespace DataStore
             }
         }
 
+        public void append(T other)
+        {
+            this.states.Add(other);
+        }
+
         public bool isEmpty()
         {
-            return this.states.Count > 0
+            return this.states.Count > 0;
         }
 
         public bool hasNext()
         {
-            return this.cur != states.Count && this.states.Count > 0;
+            return this.cur != states.Count - 1;
         }
 
         public T current()

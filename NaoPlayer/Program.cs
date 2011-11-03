@@ -6,31 +6,51 @@ using System.IO;
 using DataStore;
 using Aldebaran.Proxies;
 
+using Controller;
+
 namespace NaoPlayer
 {
     class Program
     {
         static void Main(string[] args)
         {
-            string filename = "E:/Document/11Autumn/CSE481c/kinect-nao/recordings/waveleft/wave left1.rec";
+            Dictionary<string, string> actions = new Dictionary<string, string>();
+            actions["raise the roof"] = "raisetheroof";
+            actions["walk forward"] = "walkforward";
+            actions["walk left"] = "walkleft";
+            actions["wave right"] = "waveright";
+            actions["wave left"] = "waveleft";
+            string filename = "Z:/dev/kinect-nao/recordings/";
+            ActionLibrary lib = new ActionLibrary();
 
-            List<HumanSkeleton> seq = new List<HumanSkeleton>();
-            using (StreamReader s = new StreamReader(filename))
+            foreach (string actionName in actions.Keys)
             {
-                while (!s.EndOfStream)
+                List<HumanSkeleton> seq = new List<HumanSkeleton>();
+                using (StreamReader s = new StreamReader(filename + actions[actionName] + "/"
+                    + actionName + "1.rec"))
                 {
-                    seq.Add(new HumanSkeleton(s.ReadLine()));
+                    while (!s.EndOfStream)
+                    {
+                        seq.Add(new HumanSkeleton(s.ReadLine()));
+                    }
                 }
-            }
 
-            List<float[]> naoSeq = new List<float[]>();
-            foreach (HumanSkeleton h in seq)
-            {
-                AngleConverter ac = new AngleConverter(h);
-                naoSeq.Add(ac.getAngles());
+                //List<float[]> naoSeq = new List<float[]>();
+                ActionSequence<NaoSkeleton> naoSeq = new ActionSequence<NaoSkeleton>();
+                foreach (HumanSkeleton h in seq)
+                {
+                    AngleConverter ac = new AngleConverter(h);
+                    naoSeq.append(ac.getNaoSkeleton());
+                    //naoSeq.Add(ac.getAngles());
+                }
+
+                lib.appendToCache(naoSeq);
+                lib.setCachedName(actionName);
+                lib.saveCache();
+                //bool isJointAction = true; // false if is a walking action
+                //ExecuteOnNao(naoSeq, isJointAction);
             }
-            bool isJointAction = true; // false if is a walking action
-            ExecuteOnNao(naoSeq, isJointAction);
+            lib.save(MainController.ACTION_LIB_PATH);
         }
 
         static void ExecuteOnNao(List<float[]> naoSeq, bool isJointAction)

@@ -9,7 +9,7 @@ namespace DataStore
     {
         public static bool isWithinRange(double val, double lowerBound, double upperBound)
         {
-            return val > lowerBound && val < upperBound;
+            return val >= lowerBound && val <= upperBound;
         }
 
         public static double[] toDoubleArray(float[] input)
@@ -24,6 +24,11 @@ namespace DataStore
                 output[i] = input[i];
             }
             return output;
+        }
+
+        public static float clamp(float val, float min, float max)
+        {
+            return Math.Min(max, Math.Max(min, val));
         }
     }
 }

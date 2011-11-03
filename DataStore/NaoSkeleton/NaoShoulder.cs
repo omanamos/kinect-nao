@@ -36,6 +36,10 @@ namespace DataStore
             }
             ROLL_RANGE = ROLL_MAX - ROLL_MIN;
 
+            // TODO: find out why we need these -> shouldn't if AngleConverter is working
+            roll = Util.clamp(roll, ROLL_MIN, ROLL_MAX);
+            pitch = Util.clamp(pitch, PITCH_MIN, PITCH_MAX);
+
             if (Util.isWithinRange(pitch, PITCH_MIN, PITCH_MAX))
             {
                 this.Pitch = pitch;

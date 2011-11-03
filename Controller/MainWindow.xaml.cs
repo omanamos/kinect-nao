@@ -19,6 +19,7 @@ namespace Controller
     /// </summary>
     public partial class MainWindow : Window
     {
+        MainController controller;
         public MainWindow()
         {
             InitializeComponent();
@@ -26,7 +27,7 @@ namespace Controller
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            MainController controller = new MainController();
+            controller = new MainController(this);
         }
     }
 }

@@ -32,6 +32,8 @@ namespace Recognizer
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static readonly String MODEL_LIB_PATH = "Z:/dev/kinect-nao/Recognizer/HmmData/";
+
         public MainWindow()
         {
             InitializeComponent();
@@ -138,7 +140,7 @@ namespace Recognizer
             }
             else
             {
-                SerializableHmm ser = new SerializableHmm("wave right");
+                SerializableHmm ser = new SerializableHmm("wave right", MODEL_LIB_PATH);
                 HiddenMarkovModel<MultivariateNormalDistribution> hmm = ser.LoadFromDisk();
                 PrincipalComponentAnalysis pca = ser.getPCA();
 

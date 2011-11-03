@@ -32,11 +32,11 @@ namespace Recognizer
     [Serializable()]
     class SerializableHmm : ISerializable
     {
-        private const string SERIALIZATION_FOLDER = @"../../HmmData/"; // Default = "../../HmmData/"
         private const string SERIALIZATION_PREFIX = @"hmm_"; // Default = "hmm_"
         private const string SERIALIZATION_SUFFIX = @".dat"; // Default = ".dat"
 
         private string name;
+        private string directory;
 
         private double[,] transitions;
 
@@ -108,9 +108,10 @@ namespace Recognizer
         /// that was previously serialized with the given name.
         /// </summary>
         /// <param name="name">the name of this HMM</param>
-        public SerializableHmm(string name)
+        public SerializableHmm(string name, string directory)
         {
             this.name = name;
+            this.directory = directory;
         }
 
         /// <summary>
@@ -119,10 +120,10 @@ namespace Recognizer
         public void SaveToDisk()
         {
             // Ensure path exists.
-            if (!Directory.Exists(SERIALIZATION_FOLDER))
-                Directory.CreateDirectory(SERIALIZATION_FOLDER);
-            
-            Stream stream = File.Open(SERIALIZATION_FOLDER + SERIALIZATION_PREFIX + name + SERIALIZATION_SUFFIX, FileMode.Create);
+            if (!Directory.Exists(this.directory))
+                Directory.CreateDirectory(this.directory);
+
+            Stream stream = File.Open(this.directory + SERIALIZATION_PREFIX + name + SERIALIZATION_SUFFIX, FileMode.Create);
             BinaryFormatter bf = new BinaryFormatter();
 
             bf.Serialize(stream, this);
@@ -135,7 +136,7 @@ namespace Recognizer
         /// <returns></returns>
         public HiddenMarkovModel<MultivariateNormalDistribution> LoadFromDisk()
         {
-            Stream stream = File.Open(SERIALIZATION_FOLDER + SERIALIZATION_PREFIX + name + SERIALIZATION_SUFFIX, FileMode.Open);
+            Stream stream = File.Open(this.directory + SERIALIZATION_PREFIX + name + SERIALIZATION_SUFFIX, FileMode.Open);
             BinaryFormatter bf = new BinaryFormatter();
 
             // Deserialize the SerializableHmm into a new instance.
