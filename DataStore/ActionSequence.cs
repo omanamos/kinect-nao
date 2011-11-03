@@ -65,6 +65,7 @@ namespace DataStore
 
             arr[0] = states[0].toArray(jointVals);
 
+            // Make all motions relative to the starting point
             for (int i = 0; i < states.Count; i++)
             {
                 arr[i] = states[i].toArray(jointVals);

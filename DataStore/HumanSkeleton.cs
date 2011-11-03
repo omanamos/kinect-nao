@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 
 using Microsoft.Research.Kinect.Nui;
+using KinectInterface;
 
-using MotionRecorder;
 using DataStore;
 
 namespace DataStore
@@ -13,7 +13,7 @@ namespace DataStore
     public class HumanSkeleton : ISkeleton
     {
         private Dictionary<JointID, Joint> joints;
-        private double[][] arry;
+        public double[][] JointPositions {get; private set;}
         
         // 
         /// <summary>
@@ -25,17 +25,59 @@ namespace DataStore
         public HumanSkeleton(string line)
         {
             this.joints = new Dictionary<JointID, Joint>();
-            arry = new double[RealKinect.JOINT_ORDERING.Count][];
+            JointPositions = new double[RealKinect.JOINT_ORDERING.Count][];
             string[] toks = line.Split();
             for (int i = 0; i < RealKinect.JOINT_ORDERING.Count; i++)
             {
-                arry[i] = new double[3];
+                JointPositions[i] = new double[3];
                 double x = double.Parse(toks[1 + 3 * i]);
                 double y = double.Parse(toks[2 + 3 * i]);
                 double z = double.Parse(toks[3 + 3 * i]);
-                arry[i][0] = x;
-                arry[i][1] = y;
-                arry[i][2] = z;
+                JointPositions[i][0] = x;
+                JointPositions[i][1] = y;
+                JointPositions[i][2] = z;
+                joints.Add(RealKinect.JOINT_ORDERING[i], new Joint(x, y, z));
+            }
+        }
+
+        /// <summary>
+        /// Creates a new HumanSkeleton from a flattened array of joint positions
+        /// </summary>
+        /// <param name="jointPositions"></param>
+        public HumanSkeleton(double[] jointPositions)
+        {
+            this.joints = new Dictionary<JointID, Joint>();
+            JointPositions = new double[RealKinect.JOINT_ORDERING.Count][];
+            for (int i = 0; i < RealKinect.JOINT_ORDERING.Count; i++)
+            {
+                JointPositions[i] = new double[3];
+                double x = jointPositions[3 * i];
+                double y = jointPositions[1 + 3 * i];
+                double z = jointPositions[2 + 3 * i];
+                JointPositions[i][0] = x;
+                JointPositions[i][1] = y;
+                JointPositions[i][2] = z;
+                joints.Add(RealKinect.JOINT_ORDERING[i], new Joint(x, y, z));
+            }
+        }
+
+        /// <summary>
+        /// Creates a HumanSkeleton from a list of joint positions
+        /// </summary>
+        /// <param name="jointPositions"></param>
+        public HumanSkeleton(List<double[]> jointPositions)
+        {
+            this.joints = new Dictionary<JointID, Joint>();
+            JointPositions = new double[RealKinect.JOINT_ORDERING.Count][];
+            for (int i = 0; i < RealKinect.JOINT_ORDERING.Count; i++)
+            {
+                JointPositions[i] = new double[3];
+                double x = jointPositions[i][0];
+                double y = jointPositions[i][1];
+                double z = jointPositions[i][2];
+                JointPositions[i][0] = x;
+                JointPositions[i][1] = y;
+                JointPositions[i][2] = z;
                 joints.Add(RealKinect.JOINT_ORDERING[i], new Joint(x, y, z));
             }
         }
@@ -49,10 +91,13 @@ namespace DataStore
         {
             // TODO: convert to joint vals if needed
             if (useJointvals)
-                return null;
+            {
+                AngleConverter ac = new AngleConverter(this);
+                return Util.toDoubleArray(ac.getAngles());
+            }
             else
                 // JointID.HipCenter. Update this if RealKinect.cs changes
-                return arry[4];
+                return JointPositions[4];
         }
     }
 
