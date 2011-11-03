@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataStore", "DataStore\Data
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controller", "Controller\Controller.csproj", "{CFBEB7F7-6D6E-4983-BC98-3ADF2309D683}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinectInterface", "KinectInterface\KinectInterface.csproj", "{473F84D0-0AAD-4AEC-824F-7CFB0C1D9771}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = NaoKinectTest.vsmdi
@@ -118,6 +120,16 @@ Global
 		{CFBEB7F7-6D6E-4983-BC98-3ADF2309D683}.Release|Mixed Platforms.Build.0 = Release|x86
 		{CFBEB7F7-6D6E-4983-BC98-3ADF2309D683}.Release|x86.ActiveCfg = Release|x86
 		{CFBEB7F7-6D6E-4983-BC98-3ADF2309D683}.Release|x86.Build.0 = Release|x86
+		{473F84D0-0AAD-4AEC-824F-7CFB0C1D9771}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{473F84D0-0AAD-4AEC-824F-7CFB0C1D9771}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{473F84D0-0AAD-4AEC-824F-7CFB0C1D9771}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{473F84D0-0AAD-4AEC-824F-7CFB0C1D9771}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{473F84D0-0AAD-4AEC-824F-7CFB0C1D9771}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{473F84D0-0AAD-4AEC-824F-7CFB0C1D9771}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{473F84D0-0AAD-4AEC-824F-7CFB0C1D9771}.Release|Any CPU.Build.0 = Release|Any CPU
+		{473F84D0-0AAD-4AEC-824F-7CFB0C1D9771}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{473F84D0-0AAD-4AEC-824F-7CFB0C1D9771}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{473F84D0-0AAD-4AEC-824F-7CFB0C1D9771}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

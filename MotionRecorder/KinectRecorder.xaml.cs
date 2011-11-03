@@ -15,6 +15,7 @@ using Microsoft.Win32;
 using System.IO;
 using System.Diagnostics;
 using System.Windows.Threading;
+using KinectInterface;
 
 namespace MotionRecorder
 {
@@ -323,8 +324,11 @@ namespace MotionRecorder
             {
                 // Pause the playback
                 motion_player.pause();
-                // Show the given frame
-                showFrameAtTimestamp(Convert.ToInt64(e.NewValue));
+                if (currentMotionRecording != null)
+                {
+                    // Show the given frame
+                    showFrameAtTimestamp(Convert.ToInt64(e.NewValue));
+                }
             }
         }
 
