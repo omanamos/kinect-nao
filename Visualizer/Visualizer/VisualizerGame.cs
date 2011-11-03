@@ -44,16 +44,16 @@ namespace Visualizer
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+                
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            spriteFont = Content.Load<SpriteFont>(@"SpriteFont1");
-
+            Content = new ResourceContentManager(this.Services, Resource1.ResourceManager);
+            spriteFont = Content.Load<SpriteFont>("SpriteFont1");
+            
             sphere = new SpherePrimitive(GraphicsDevice, 0.5f, 8);
 
             grid = new SampleGrid();
