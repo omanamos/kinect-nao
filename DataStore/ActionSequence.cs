@@ -63,7 +63,7 @@ namespace DataStore
 
             double[][] arr = new double[states.Count][];
 
-            arr[0] = states[0].toArray(jointVals);
+            double[] start = states[0].toArray(jointVals);
 
             // Make all motions relative to the starting point
             for (int i = 0; i < states.Count; i++)
@@ -71,7 +71,7 @@ namespace DataStore
                 arr[i] = states[i].toArray(jointVals);
                 for (int j = 0; j < arr[0].Length; j++)
                 {
-                    arr[i][j] -= arr[0][j];
+                    arr[i][j] -= start[j];
                 }
             }
             return arr;
