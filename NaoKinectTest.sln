@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controller", "Controller\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KinectInterface", "KinectInterface\KinectInterface.csproj", "{473F84D0-0AAD-4AEC-824F-7CFB0C1D9771}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NaoPlayer", "NaoPlayer\NaoPlayer.csproj", "{A087F909-7B91-4BB9-B139-EF2012FF72FA}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = NaoKinectTest.vsmdi
@@ -130,6 +132,16 @@ Global
 		{473F84D0-0AAD-4AEC-824F-7CFB0C1D9771}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{473F84D0-0AAD-4AEC-824F-7CFB0C1D9771}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{473F84D0-0AAD-4AEC-824F-7CFB0C1D9771}.Release|x86.ActiveCfg = Release|Any CPU
+		{A087F909-7B91-4BB9-B139-EF2012FF72FA}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{A087F909-7B91-4BB9-B139-EF2012FF72FA}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{A087F909-7B91-4BB9-B139-EF2012FF72FA}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{A087F909-7B91-4BB9-B139-EF2012FF72FA}.Debug|x86.ActiveCfg = Debug|x86
+		{A087F909-7B91-4BB9-B139-EF2012FF72FA}.Debug|x86.Build.0 = Debug|x86
+		{A087F909-7B91-4BB9-B139-EF2012FF72FA}.Release|Any CPU.ActiveCfg = Release|x86
+		{A087F909-7B91-4BB9-B139-EF2012FF72FA}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{A087F909-7B91-4BB9-B139-EF2012FF72FA}.Release|Mixed Platforms.Build.0 = Release|x86
+		{A087F909-7B91-4BB9-B139-EF2012FF72FA}.Release|x86.ActiveCfg = Release|x86
+		{A087F909-7B91-4BB9-B139-EF2012FF72FA}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -96,8 +96,10 @@ namespace DataStore
                 return Util.toDoubleArray(ac.getAngles());
             }
             else
-                // JointID.HipCenter. Update this if RealKinect.cs changes
-                return JointPositions[4];
+                return new double[] {
+                    joints[JointID.HipCenter].x, 
+                    joints[JointID.HipCenter].y, 
+                    joints[JointID.HipCenter].z};
         }
     }
 

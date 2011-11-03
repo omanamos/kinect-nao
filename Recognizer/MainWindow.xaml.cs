@@ -23,6 +23,7 @@ using DataStore;
 using Recognizer;
 using System.Threading;
 using System.Timers;
+using Accord.Statistics.Analysis;
 
 namespace Recognizer
 {
@@ -120,15 +121,18 @@ namespace Recognizer
                 // add that to the sequences array
                 sequences[i] = trainSeq;
             }
-            bool doTrain = true;
+                
+            bool doTrain = false;
             if (doTrain)
             {
                 if (datafiles.Count > 0)
                 {
+                    PrincipalComponentAnalysis pca = computePCA(sequences);
                     // train a HMM
-                    HiddenMarkovModel<MultivariateNormalDistribution> hmm = trainHMM(sequences);
+                    double[][][] projSeqs = getProjectedSequences(sequences, pca);
+                    HiddenMarkovModel<MultivariateNormalDistribution> hmm = trainHMM(projSeqs);
                     // save it to filename.hmm
-                    SerializableHmm s = new SerializableHmm(actName, hmm);
+                    SerializableHmm s = new SerializableHmm(actName, hmm, pca);
                     s.SaveToDisk();
                 }
             }
@@ -136,14 +140,124 @@ namespace Recognizer
             {
                 SerializableHmm ser = new SerializableHmm("wave right");
                 HiddenMarkovModel<MultivariateNormalDistribution> hmm = ser.LoadFromDisk();
+                PrincipalComponentAnalysis pca = ser.getPCA();
 
                 foreach (double[][] seq in sequences)
                 {
+                    double[,] data = jaggedToMulti(seq);
+                    string fn = System.IO.Path.GetRandomFileName();
+                    using (StreamWriter sr = new StreamWriter("Z:/WindowsFolders/Desktop/" + fn))
+                    {
+                        for (int i = 0; i < data.GetLength(0); i++)
+                        {
+                            for (int j = 0; j < data.GetLength(1); j++)
+                            {
+                                sr.Write(data[i, j] + " ");
+                            }
+                            sr.WriteLine();
+                        }
+                    }
+                    //double[][] projSeq = getProjectedSequence(seq, pca);
                     double l = hmm.Evaluate(seq, false);
                     Console.WriteLine("Likelihood: " + l);
                 }
             }
             
+        }
+
+        private PrincipalComponentAnalysis computePCA(double[][][] sequences)
+        {
+            PrincipalComponentAnalysis pca;
+            // Create combined array for computing PCA
+
+            int numTotalRows = sequences.Select(e => e.GetLength(0)).Sum();
+
+            double[][] pcaCombined = new double[numTotalRows][];
+            int total = 0;
+            for (int i = 0; i < sequences.GetLength(0); i++)
+            {
+                for (int j = 0; j < sequences[i].GetLength(0); j++)
+                {
+                    pcaCombined[total + j] = sequences[i][j];
+                }
+                total += sequences[i].GetLength(0);
+            }
+
+            // PCA
+            double[,] pcaCombinedMulti = jaggedToMulti(pcaCombined);
+            pca = new PrincipalComponentAnalysis(pcaCombinedMulti);
+            pca.Compute();
+
+            return pca;
+        }
+
+        private double[][] getProjectedSequence(double[][] sequence, PrincipalComponentAnalysis pca)
+        {
+            if (pca == null)
+                return sequence;
+
+            int numComponents = pca.GetNumberOfComponents(1.0f);
+
+            double[,] data = jaggedToMulti(sequence);
+            string fn = System.IO.Path.GetRandomFileName();
+            using (StreamWriter sr = new StreamWriter("Z:/WindowsFolders/Desktop/" + fn))
+            {
+                for (int i = 0; i < data.GetLength(0); i++)
+                {
+                    for (int j = 0; j < data.GetLength(1); j++)
+                    {
+                        sr.Write(data[i, j] + " ");
+                    }
+                    sr.WriteLine();
+                }
+            }
+            double[,] projectedData = pca.Transform(data, numComponents);
+            double[][] projTrainSeq = multiToJagged(projectedData);
+
+            return projTrainSeq;
+        }
+
+        private double[][][] getProjectedSequences(double[][][] sequences, PrincipalComponentAnalysis pca)
+        {
+            int nseqs = sequences.GetLength(0);
+            double[][][] projSeqs = new double[nseqs][][];
+            for (int i = 0; i < nseqs; i++)
+            {
+                projSeqs[i] = getProjectedSequence(sequences[i], pca);
+            }
+            return projSeqs;
+        }
+
+
+        private double[,] jaggedToMulti(double[][] inarry)
+        {
+            int rows = inarry.GetLength(0);
+            int cols = inarry[0].GetLength(0);
+            double[,] outArry = new double[rows, cols];
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    outArry[i, j] = inarry[i][j];
+                }
+            }
+            return outArry;
+        }
+
+        private double[][] multiToJagged(double[,] inarry)
+        {
+            int rows = inarry.GetLength(0);
+            int cols = inarry.GetLength(1);
+            double[][] outArry = new double[rows][];
+            for (int i = 0; i < rows; i++)
+            {
+                outArry[i] = new double[cols];
+                for (int j = 0; j < cols; j++)
+                {
+                    outArry[i][j] = inarry[i, j];
+                }
+            }
+            return outArry;
         }
 
         private HiddenMarkovModel<MultivariateNormalDistribution>
@@ -168,7 +282,8 @@ namespace Recognizer
                 };
 
             // Train the hmm
-            teacher.Run(sequences);
+            double ll = teacher.Run(sequences);
+            Console.WriteLine("Average likelihood during training: " + Math.Exp(ll));
             return hmm;
         }
 
@@ -176,18 +291,21 @@ namespace Recognizer
         {
             
             List<string> train_files = new List<string>();
-            
             /*
             for (int i = 1; i <= 5; i++)
             {
                 train_files.Add(@"Z:/WindowsFolders/Desktop/raisetheroof/raise the roof" + i + ".rec");
-            }
-            */
+            }*/
             
-            for (int i = 1; i <= 10; i++)
+            for (int i = 1; i <= 6; i++)
             {
-                train_files.Add(@"Z:/WindowsFolders/Desktop/waveleft/wave left" + i + ".rec");
+                train_files.Add(@"Z:/WindowsFolders/Desktop/raisetheroof/raise the roof" + i + ".rec");
             }
+            /*
+            for (int i = 11; i <= 14; i++)
+            {
+                train_files.Add(@"Z:/WindowsFolders/Desktop/waveright2/wave right" + i + ".rec");
+            }*/
             
             /*
             train_files.Add(@"Z:/WindowsFolders/Desktop/walk forward11.rec");
@@ -196,50 +314,59 @@ namespace Recognizer
             */
 
             train(train_files);
-            /*
-            t.Elapsed += new ElapsedEventHandler(t_Elapsed);
-            t.Start();*/
+            
+            HumanActionRecognizer har = new HumanActionRecognizer();
+            har.Recognition += new HumanActionRecognizer.RecognitionEventHandler(har_Recognition);
+            har.RecordingStart += new HumanActionRecognizer.RecordingEventHandler(har_RecordingStart);
+            har.RecordingReady += new HumanActionRecognizer.RecordingEventHandler(har_RecordingReady);
+            har.RecordingStop += new HumanActionRecognizer.RecordingEventHandler(har_RecordingStop);
+            har.start();
+            
         }
 
-        void t_Elapsed(object sender, ElapsedEventArgs e)
+        void har_RecordingReady(object sender, EventArgs e)
         {
-            recognize();
-        }
-        System.Timers.Timer t = new System.Timers.Timer(1000 / 30);
-        HMMRecognizer rec = new HMMRecognizer(@"Z:/WindowsFolders/MyDocs/Capstone/NaoKinectTest/Recognizer/HmmData");
-        // start thread creating actionSequences
-        KinectSequencer sequencer = new KinectSequencer();
-        bool gotAction = false;
-        string act = "";
-        private void recognize()
-        {
-            if (!gotAction)
-            {
-                // if there is a sequence available
-                if (sequencer.SequenceAvailable)
+            Dispatcher.BeginInvoke(new Action(
+                delegate()
                 {
-                    // grab the latest sequence
-                    ActionSequence<HumanSkeleton> seq = sequencer.getLatestSequence();
-                    // perform recognition
-                    Tuple<string, double> guess = rec.recognizeAction(seq);
-                    act = guess.Item1;
-                    Console.WriteLine("Action: " + act + " L: " + guess.Item2);
-                    Dispatcher.BeginInvoke(new Action(
-                        delegate(){ 
-                            action.Text = act;
-                            score.Text = guess.Item2.ToString();
-                            if (act == "")
-                            {
-                                score.Foreground = new SolidColorBrush(Colors.Red);
-                            }
-                            else
-                            {
-                                score.Foreground = new SolidColorBrush(Colors.Green);
-                            }
-                        }));
-                }
-            }
+                    recording_indicator.Background = new SolidColorBrush(Colors.Green);
+                }));
         }
 
+        void har_Recognition(object sender, RecognitionEventArgs e)
+        {
+            Dispatcher.BeginInvoke(new Action(
+                    delegate()
+                    {
+                        action.Text = e.Class;
+                        score.Text = e.Likelihood.ToString();
+                        if (e.Class == "")
+                        {
+                            score.Foreground = new SolidColorBrush(Colors.Red);
+                        }
+                        else
+                        {
+                            score.Foreground = new SolidColorBrush(Colors.Green);
+                        }
+                    }));
+        }
+
+        void har_RecordingStart(object sender, EventArgs e)
+        {
+            Dispatcher.BeginInvoke(new Action(
+                delegate()
+                {
+                    recording_indicator.Background = new SolidColorBrush(Colors.Red);
+                }));
+        }
+
+        void har_RecordingStop(object sender, EventArgs e)
+        {
+            Dispatcher.BeginInvoke(new Action(
+            delegate()
+            {
+                recording_indicator.Background = new SolidColorBrush(Colors.Black);
+            }));
+        }
     }
 }

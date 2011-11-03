@@ -5,5 +5,8 @@
     <StackPanel>
         <TextBox Name="action" Height="115" FontSize="48"></TextBox>
         <TextBox Name="score" Height="115" FontSize="48"></TextBox>
+        <StackPanel Orientation="Horizontal">
+            <Label Background="Black" Name="recording_indicator" Height="100" Width="100" ></Label>
+        </StackPanel>
     </StackPanel>
 </Window>

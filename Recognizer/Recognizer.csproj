@@ -67,6 +67,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="HumanActionRecognizer.cs" />
     <Compile Include="SerializableHmm.cs" />
     <Compile Include="Util.cs" />
     <Page Include="MainWindow.xaml">

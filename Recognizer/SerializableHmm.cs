@@ -25,6 +25,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 // Use Hidden Markov Models.
 using Accord.Statistics.Models.Markov;
 using Accord.Statistics.Distributions.Multivariate;
+using Accord.Statistics.Analysis;
 
 namespace Recognizer
 {
@@ -49,6 +50,9 @@ namespace Recognizer
         private double[,,] covariance;
 
         private double[] probabilities;
+        private string actName;
+        private HiddenMarkovModel<MultivariateNormalDistribution> hmm;
+        private Accord.Statistics.Analysis.PrincipalComponentAnalysis pca;
 
         /// <summary>
         /// Saves to this object the information necessary for later
@@ -59,7 +63,11 @@ namespace Recognizer
         public SerializableHmm(string name, HiddenMarkovModel<MultivariateNormalDistribution> hmm)
         {
             this.name = name;
+            construct(hmm);
+        }
 
+        private void construct(HiddenMarkovModel<MultivariateNormalDistribution> hmm)
+        {
             // Copy the transitions matrix.
             transitions = hmm.Transitions;
 
@@ -132,6 +140,7 @@ namespace Recognizer
 
             // Deserialize the SerializableHmm into a new instance.
             SerializableHmm otherSHmm = (SerializableHmm)bf.Deserialize(stream);
+            pca = otherSHmm.pca;
             stream.Close();
 
             MultivariateNormalDistribution[] emissions = new MultivariateNormalDistribution[otherSHmm.mean.GetLength(0)];
@@ -173,6 +182,21 @@ namespace Recognizer
             mean = (double[,])info.GetValue("mean", typeof(double[,]));
             covariance = (double[,,])info.GetValue("covariance", typeof(double[,,]));
             probabilities = (double[])info.GetValue("probabilities", typeof(double[]));
+            try
+            {
+                pca = (PrincipalComponentAnalysis)(info.GetValue("pca", typeof(PrincipalComponentAnalysis)));
+            }
+            catch (System.Runtime.Serialization.SerializationException ex)
+            {
+                pca = null;
+            }
+        }
+
+        public SerializableHmm(string actName, HiddenMarkovModel<MultivariateNormalDistribution> hmm, Accord.Statistics.Analysis.PrincipalComponentAnalysis pca)
+        {
+            this.pca = pca;
+            this.name = actName;
+            construct(hmm);
         }
 
         /// <summary>
@@ -187,6 +211,12 @@ namespace Recognizer
             info.AddValue("mean", mean);
             info.AddValue("covariance", covariance);
             info.AddValue("probabilities", probabilities);
+            info.AddValue("pca", pca);
+        }
+
+        internal Accord.Statistics.Analysis.PrincipalComponentAnalysis getPCA()
+        {
+            return pca;
         }
     }
 }

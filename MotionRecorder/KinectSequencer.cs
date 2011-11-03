@@ -21,7 +21,7 @@ namespace MotionRecorder
         // The contents of our current recording
         public List<Tuple<long, HumanSkeleton>> currentRecordingSequence = new List<Tuple<long, HumanSkeleton>>();
 
-        long maxTimeWindow = 3000; // 3 seconds
+        long maxTimeWindow = 5000; // 5 seconds
 
         public bool SequenceAvailable { get; private set; }
         
@@ -39,7 +39,6 @@ namespace MotionRecorder
             viz.showSkeleton(skel);
             lock (currentRecordingSequence)
             {
-                Console.WriteLine("Buffer size: " + currentRecordingSequence.Count);
                 if (currentRecordingSequence.Count == 0)
                 {
                     currentRecordingSequence.Add(Tuple.Create(stopwatch.ElapsedMilliseconds, skel));
@@ -62,11 +61,9 @@ namespace MotionRecorder
                     currentRecordingSequence.Add(Tuple.Create(endMs, skel));
                     startMs = currentRecordingSequence[0].Item1;
                     msDelta = (endMs - startMs);
-                    Console.WriteLine("time delta: " + msDelta);
-                    if (msDelta > maxTimeWindow / 2 && currentRecordingSequence.Count > 20)
+                    if (msDelta > maxTimeWindow / 2 && currentRecordingSequence.Count > (maxTimeWindow / 30) / 2)
                     {
                         // We have a valid capture if we have at least half our max time window
-                        // sanity check, we should have at least 20pts (600ms at 30fps)
                         SequenceAvailable = true;
                     }
                 }
@@ -87,6 +84,14 @@ namespace MotionRecorder
             else
             {
                 return null;
+            }
+        }
+
+        public void clearSequenceBuffer()
+        {
+            lock (currentRecordingSequence)
+            {
+                currentRecordingSequence.Clear();
             }
         }
 
