@@ -22,7 +22,6 @@ namespace Controller
         {
             try
             {
-                // TODO(namos): set the stiffness in a cleaner way
                 lastUpdate = null;
                 proxy = new MotionProxy(ip, 9559);
                 this.setStiffness(1.0f);
@@ -41,6 +40,28 @@ namespace Controller
         private void setStiffness(float stiffness)
         {
             float time = 1.0f;
+            String[] joints = {"HeadYaw", "HeadPitch",
+                                  "LShoulderPitch", "RShoulderPitch",
+                                  "LShoulderRoll", "RShoulderRoll",
+                                  "LElbowYaw", "RElbowYaw",
+                                  "LElbowRoll", "RElbowRoll",
+                                  "RHipYawPitch", "LHipYawPitch",
+                                  "LHipPitch", "RHipPitch",
+                                  "LKneePitch", "RKneePitch",
+                                  "LAnklePitch", "RAnklePitch",
+                                  "LHipRoll", "RHipRoll",
+                                  "LAnkleRoll", "RAnkleRoll"};
+            float[] stiff = {stiffness, stiffness, stiffness, stiffness, stiffness, stiffness,
+                                stiffness, stiffness, stiffness, stiffness, stiffness, stiffness,
+                                stiffness, stiffness, stiffness, stiffness, stiffness, stiffness,
+                                stiffness, stiffness, stiffness, stiffness};
+            float[] times = {time, time, time, time, time, time,
+                                time, time, time, time, time, time,
+                                time, time, time, time, time, time,
+                                time, time, time, time};
+
+            proxy.stiffnessInterpolation(joints, stiff, times);
+            /*
             proxy.stiffnessInterpolation("Head", stiffness, time);
             proxy.stiffnessInterpolation("LShoulderPitch", stiffness, time);
             proxy.stiffnessInterpolation("RShoulderPitch", stiffness, time);
@@ -62,23 +83,27 @@ namespace Controller
             proxy.stiffnessInterpolation("LHipRoll", stiffness, time);
             proxy.stiffnessInterpolation("RHipRoll", stiffness, time);
             proxy.stiffnessInterpolation("LAnkleRoll", stiffness, time);
-            proxy.stiffnessInterpolation("RAnkleRoll", stiffness, time);
+            proxy.stiffnessInterpolation("RAnkleRoll", stiffness, time);*/
         }
 
         public void update(NaoSkeleton skeleton)
         {
-            // TODO(namos): add in code to make the NAO walk
-            // Working on rotation angle
+            // Given 0 to rotational angle for now
             NaoPosition nao_pos = skeleton.Position;
             NaoPosition nao_pos_prv = lastUpdate.Position;
- //           Vector prv_shoulderToCenter = new Vector(1, 2);
- //           Vector shoulderToCenter = new Vector(2, 1);
-//            Vector.AngleBetween(prv_shoulderToCenter, shoulderToCenter);
             proxy.walkTo(nao_pos.X - nao_pos_prv.X, nao_pos.Y - nao_pos_prv.Y, 0.0f);
             
-            // TODO(namos): angleInterplation? to send multiple angles at once
-            //proxy.angleInterpolation("", "", "", true);
+            String[] angleTypes = {"LShoulderPitch", "RShoulderPitch", 
+                                      "LShoulderRoll", "RShoulderRoll", 
+                                      "LElbowYaw", "RElbowYaw", 
+                                      "LElbowRoll", "RElbowRoll"};
+            float[] angles = {skeleton.LeftShoulder.Pitch, skeleton.RightShoulder.Pitch, 
+                                 skeleton.LeftShoulder.Roll, skeleton.RightShoulder.Roll, 
+                                 skeleton.LeftElbow.Yaw, skeleton.RightElbow.Yaw, 
+                                 skeleton.LeftElbow.Roll, skeleton.RightElbow.Roll};
 
+            proxy.angleInterpolationWithSpeed(angleTypes, angles, SPEED);
+            /*
             //Shoulder Angles
             proxy.setAngles("LShoulderPitch", (float)skeleton.LeftShoulder.Pitch, SPEED);
             proxy.setAngles("RShoulderPitch", (float)skeleton.RightShoulder.Pitch, SPEED);
@@ -89,7 +114,7 @@ namespace Controller
             proxy.setAngles("LElbowYaw", (float)skeleton.LeftElbow.Yaw, SPEED);
             proxy.setAngles("RElbowYaw", (float)skeleton.RightElbow.Yaw, SPEED);
             proxy.setAngles("LElbowRoll", (float)skeleton.LeftElbow.Roll, SPEED);
-            proxy.setAngles("RElbowRoll", (float)skeleton.RightElbow.Roll, SPEED);
+            proxy.setAngles("RElbowRoll", (float)skeleton.RightElbow.Roll, SPEED);*/
 
             //Shoulder Angles
             Console.Out.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");

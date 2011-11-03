@@ -39,13 +39,38 @@ namespace DataStore
 
         public ActionLibrary(SerializationInfo info, StreamingContext ctxt)
         {
-            this.actions = (Dictionary<String, ActionSequence<NaoSkeleton>>)info.GetValue("actions",
-                typeof(Dictionary<String, ActionSequence<NaoSkeleton>>));
+            // retrieving keys and values separately as dictionary is not serializable
+            String[] keys = (String[])info.GetValue("keys", typeof(String[]));
+            ActionSequence<NaoSkeleton>[] values = (ActionSequence<NaoSkeleton>[])info.GetValue("values",
+                typeof(ActionSequence<NaoSkeleton>[]));
+
+            // reconstructs the dictionary
+            Dictionary<String, ActionSequence<NaoSkeleton>> actDict = new Dictionary<string, ActionSequence<NaoSkeleton>>();
+            for (int i = 0; i < keys.Length; i++)
+            {
+                actDict.Add(keys[i], values[i]);
+            }
+            this.actions = actDict;
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
         {
-            info.AddValue("actions", actions);
+            int dictSize = actions.Count;
+
+            String[] keys = new String[dictSize];
+            ActionSequence<NaoSkeleton>[] values = new ActionSequence<NaoSkeleton>[dictSize];
+
+            // serializing dictionary separately because a dictionary is not serializable
+            int i = 0;
+            foreach (KeyValuePair<String, ActionSequence<NaoSkeleton>> pair in actions)
+            {
+                keys[i] = pair.Key;
+                values[i] = pair.Value;
+                i++;
+            }
+
+            info.AddValue("keys", keys);
+            info.AddValue("values", values);
         }
 
         public static ActionLibrary load(String path)
