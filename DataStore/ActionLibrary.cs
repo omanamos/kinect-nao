@@ -75,6 +75,7 @@ namespace DataStore
 
         public ActionLibrary(SerializationInfo info, StreamingContext ctxt)
         {
+            // field 1: actions
             // retrieving keys and values separately as dictionary is not serializable
             String[] keys = (String[])info.GetValue("keys", typeof(String[]));
             ActionSequence<NaoSkeleton>[] values = (ActionSequence<NaoSkeleton>[])info.GetValue("values",
@@ -87,6 +88,12 @@ namespace DataStore
                 actDict.Add(keys[i], values[i]);
             }
             this.actions = actDict;
+
+            // field 2: cachedStates
+            this.cachedStates = (ActionSequence<NaoSkeleton>)info.GetValue("cachedStates", typeof(ActionSequence<NaoSkeleton>));
+
+            // field 3: cachedName;
+            this.cachedName = (String)info.GetValue("cachedName", typeof(String));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
@@ -107,6 +114,8 @@ namespace DataStore
 
             info.AddValue("keys", keys);
             info.AddValue("values", values);
+            info.AddValue("cachedStates", cachedStates);
+            info.AddValue("cachedName", cachedName);
         }
 
         public static ActionLibrary load(String path)
