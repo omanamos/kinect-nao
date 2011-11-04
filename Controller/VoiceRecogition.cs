@@ -41,7 +41,7 @@ namespace Controller
             recogEng.RecognizeAsync(RecognizeMode.Multiple);
         }
 
-        public void exit()
+        public void stop()
         {
             recogEng.RecognizeAsyncStop();
         }

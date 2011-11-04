@@ -6,6 +6,7 @@ using System.Speech.Recognition;
 
 using DataStore;
 using Recognizer;
+using System.Windows.Media;
 
 namespace Controller
 {
@@ -21,12 +22,11 @@ namespace Controller
 
         private Dictionary<State, Mapping> map;
 
-        private List<string> actions;
         private ActionLibrary lib;
 
         private ActionController nao;
-        private HMMRecognizer har;
         private MainWindow window;
+        private HumanActionRecognizer har;
         
         public MainController(MainWindow window)
         {
@@ -37,8 +37,8 @@ namespace Controller
             map[State.start] = new Mapping("nao", new List<string>() { 
                     "watch me", "perform this", "learn this", "exit" });
             map[State.har] = new Mapping("nao", new List<string>() { "go back" });
-            map[State.perform] = new Mapping("perform", new List<string>(actions) { "go back" });
-            map[State.learn] = new Mapping("nao", new List<string>(actions) { "go back", "restart",
+            map[State.perform] = new Mapping("perform", new List<string>(this.lib.getActionNames()) { "go back" });
+            map[State.learn] = new Mapping("nao", new List<string>(this.lib.getActionNames()) { "go back", "restart",
                 "save"});
             map[State.listenForNewName] = new Mapping("it is named");
             map[State.confirmation] = new Mapping("confirm", new List<string>() { "yes", "no" });
@@ -64,7 +64,11 @@ namespace Controller
             this.state = state;
             if (this.recog != null)
             {
-                this.recog.exit();
+                this.recog.stop();
+            }
+            if (this.state == State.perform || this.state == State.learn)
+            {
+                map[state].update(new List<string> (this.lib.getActionNames()));
             }
             this.recog = new VoiceRecogition(map[state], this);
         }
@@ -109,7 +113,9 @@ namespace Controller
                             Console.WriteLine("Nao perform: " + suffix);
                             ActionSequence<NaoSkeleton> seq = this.lib.getSequence(suffix);
                             this.lib.appendToCache(seq);
+                            this.recog.stop();
                             this.nao.runAction(seq);
+                            this.recog.start();
                         }
                         break;
                     case State.listenForNewName:
@@ -126,7 +132,9 @@ namespace Controller
                         else
                         {
                             Console.WriteLine("Nao perform: " + suffix);
+                            this.recog.stop();
                             this.nao.runAction(this.lib.getSequence(suffix));
+                            this.recog.start();
                         }
                         break;
                     case State.har:
@@ -151,15 +159,19 @@ namespace Controller
                                     this.switchStates(State.start);
                                     break;
                                 case State.listenForNewName:
+                                    String name = this.lib.getCachedName();
                                     if (this.lib.saveCache())
                                     {
+                                        Console.WriteLine("Saving action: " + name + "!");
                                         this.nao.speak("Ok, I saved the new action called "
-                                            + this.lib.getCachedName());
+                                            + name);
                                     }
                                     else
                                     {
+                                        this.lib.clearCache();
+                                        Console.WriteLine("Cannot save action!");
                                         this.nao.speak("You didn't record anything, I'm not going"
-                                            + " to save an empty action silly");
+                                            + " to save an empty action. you silly fool");
                                     }
                                     this.switchStates(State.start);
                                     break;
@@ -196,8 +208,10 @@ namespace Controller
                 // TODO(namos): record data from kinect -> classify data -> have Nao speak
                 Console.WriteLine("I'm Watching you");
                 this.switchStates(State.har);
+                this.recog.stop();
+                this.har.start();
             }
-            else if (suffix.Equals("listen"))
+            else if (suffix.Equals("perform this"))
             {
                 Console.WriteLine("What do you want me to do?");
                 this.switchStates(State.perform);
@@ -224,16 +238,20 @@ namespace Controller
 
         private void init()
         {
-            this.har = new HMMRecognizer(MODEL_LIB_PATH);
             this.lib = ActionLibrary.load(ACTION_LIB_PATH);
-            this.actions = new List<string>(this.lib.getActionNames());
+            har = new HumanActionRecognizer(MODEL_LIB_PATH);
+            har.Recognition += new HumanActionRecognizer.RecognitionEventHandler(har_Recognition);
+            har.RecordingStart += new HumanActionRecognizer.RecordingEventHandler(har_RecordingStart);
+            har.RecordingReady += new HumanActionRecognizer.RecordingEventHandler(har_RecordingReady);
+            har.RecordingStop += new HumanActionRecognizer.RecordingEventHandler(har_RecordingStop);
         }
 
         public void exit()
         {
             this.save();
-            this.recog.exit();
+            this.recog.stop();
             this.nao.exit();
+            this.har.exit();
             Environment.Exit(0);
         }
 
@@ -241,6 +259,64 @@ namespace Controller
         {
             this.lib.save(ACTION_LIB_PATH);
         }
+
+        #region har callbacks
+        void har_RecordingReady(object sender, EventArgs e)
+        {
+            this.window.Dispatcher.BeginInvoke(new Action(
+                delegate()
+                {
+                    this.window.recording_indicator.Background = new SolidColorBrush(Colors.Green);
+                }));
+        }
+
+        void har_Recognition(object sender, Recognizer.RecognitionEventArgs e)
+        {
+            this.window.Dispatcher.BeginInvoke(new Action(
+                    delegate()
+                    {
+                        this.window.action.Text = e.Class;
+                        this.window.score.Text = e.Likelihood.ToString();
+                        if (e.Class == "")
+                        {
+                            this.window.score.Foreground = new SolidColorBrush(Colors.Red);
+                        }
+                        else
+                        {
+                            this.window.score.Foreground = new SolidColorBrush(Colors.Green);
+                        }
+                    }));
+            
+            if (e.Class != "")
+            {
+                this.nao.speak("You are performing " + e.Class);
+                this.har.stop();
+                this.switchStates(State.start);
+            }
+            else
+            {
+                this.nao.speak("I don't know what you are doing.");
+            }
+        }
+
+        void har_RecordingStart(object sender, EventArgs e)
+        {
+            this.window.Dispatcher.BeginInvoke(new Action(
+                delegate()
+                {
+                    this.window.recording_indicator.Background = new SolidColorBrush(Colors.Red);
+                }));
+        }
+
+        void har_RecordingStop(object sender, EventArgs e)
+        {
+            this.window.Dispatcher.BeginInvoke(new Action(
+            delegate()
+            {
+                this.window.recording_indicator.Background = new SolidColorBrush(Colors.Black);
+            }));
+        }
+        #endregion
 
         public class Mapping {
             public readonly string prefix;
@@ -254,20 +330,42 @@ namespace Controller
             {
                 this.prefix = prefix;
                 this.useDictation = true;
+                this.list = new List<string>();
+                this.lookup = new HashSet<string>();
             }
             
             public Mapping(string prefix, List<string> list)
             {
                 this.prefix = prefix;
                 this.list = list;
+                this.useDictation = false;
                 this.lookup = new HashSet<string>(list);
+            }
+
+            public void update(List<string> set)
+            {
+                foreach (string s in set)
+                {
+                    if (!this.lookup.Contains(s))
+                    {
+                        this.lookup.Add(s);
+                        this.list.Add(s);
+                    }
+                }
             }
 
             public bool contains(string command)
             {
-                if (command.StartsWith(prefix)) {
+                if (this.useDictation)
+                {
+                    return true;
+                }
+                else if (command.StartsWith(prefix))
+                {
                     return this.lookup.Contains(command.Replace(prefix, "").Trim());
-                } else {
+                }
+                else
+                {
                     return false;
                 }
             }

@@ -19,8 +19,16 @@ namespace DataStore
         public NaoElbow RightElbow { get; private set; }
         public NaoHand LeftHand { get; private set; }
         public NaoHand RightHand { get; private set; }
+        public readonly bool isUpperBody;
+
 
         private NaoSkeleton() {}
+
+        public NaoSkeleton(NaoPosition position)
+        {
+            this.Position = position;
+            this.isUpperBody = false;
+        }
 
         public NaoSkeleton(NaoPosition position,
                 NaoShoulder leftShoulder, NaoShoulder rightShoulder,
@@ -28,6 +36,7 @@ namespace DataStore
                 NaoElbow leftElbow, NaoElbow rightElbow,
                 NaoHand leftHand, NaoHand rightHand)
         {
+            this.isUpperBody = true;
             this.Position = position;
 
             this.LeftShoulder = leftShoulder;

@@ -45,6 +45,7 @@ namespace DataStore
                 roll_min = ROLL_MIN;
                 roll_max = ROLL_MAX;
             }
+            roll = Util.clamp(roll, roll_min, roll_max);
             if (Util.isWithinRange(roll, roll_min, roll_max))
             {
                 this.Roll = roll;

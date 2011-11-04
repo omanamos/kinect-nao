@@ -124,17 +124,18 @@ namespace Recognizer
                 sequences[i] = trainSeq;
             }
                 
-            bool doTrain = false;
+            bool doTrain = true;
             if (doTrain)
             {
                 if (datafiles.Count > 0)
                 {
-                    PrincipalComponentAnalysis pca = computePCA(sequences);
+                    //PrincipalComponentAnalysis pca = computePCA(sequences);
                     // train a HMM
-                    double[][][] projSeqs = getProjectedSequences(sequences, pca);
-                    HiddenMarkovModel<MultivariateNormalDistribution> hmm = trainHMM(projSeqs);
+                    //double[][][] projSeqs = getProjectedSequences(sequences, pca);
+                    HiddenMarkovModel<MultivariateNormalDistribution> hmm = trainHMM(sequences);
                     // save it to filename.hmm
-                    SerializableHmm s = new SerializableHmm(actName, hmm, pca);
+                    //SerializableHmm s = new SerializableHmm(actName, hmm, pca);
+                    SerializableHmm s = new SerializableHmm(actName, hmm);
                     s.SaveToDisk();
                 }
             }
@@ -230,7 +231,6 @@ namespace Recognizer
             return projSeqs;
         }
 
-
         private double[,] jaggedToMulti(double[][] inarry)
         {
             int rows = inarry.GetLength(0);
@@ -298,16 +298,17 @@ namespace Recognizer
             {
                 train_files.Add(@"Z:/WindowsFolders/Desktop/raisetheroof/raise the roof" + i + ".rec");
             }*/
-            
+            /*
             for (int i = 1; i <= 6; i++)
             {
                 train_files.Add(@"Z:/WindowsFolders/Desktop/raisetheroof/raise the roof" + i + ".rec");
-            }
-            /*
-            for (int i = 11; i <= 14; i++)
-            {
-                train_files.Add(@"Z:/WindowsFolders/Desktop/waveright2/wave right" + i + ".rec");
             }*/
+            
+
+            for (int i = 1; i <= 10; i++)
+            {
+                train_files.Add(@"Z:/dev/kinect-nao/recordings/walkright/walk right" + i + ".rec");
+            }
             
             /*
             train_files.Add(@"Z:/WindowsFolders/Desktop/walk forward11.rec");
@@ -316,14 +317,14 @@ namespace Recognizer
             */
 
             train(train_files);
-            
-            HumanActionRecognizer har = new HumanActionRecognizer();
+            /*
+            HumanActionRecognizer har = new HumanActionRecognizer(@"Z:/WindowsFolders/MyDocs/Capstone/Recognizer/HmmData");
             har.Recognition += new HumanActionRecognizer.RecognitionEventHandler(har_Recognition);
             har.RecordingStart += new HumanActionRecognizer.RecordingEventHandler(har_RecordingStart);
             har.RecordingReady += new HumanActionRecognizer.RecordingEventHandler(har_RecordingReady);
             har.RecordingStop += new HumanActionRecognizer.RecordingEventHandler(har_RecordingStop);
             har.start();
-            
+            */
         }
 
         void har_RecordingReady(object sender, EventArgs e)

@@ -29,5 +29,10 @@ namespace Controller
         {
             controller = new MainController(this);
         }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            controller.exit();
+        }
     }
 }

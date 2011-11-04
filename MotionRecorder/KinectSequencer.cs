@@ -95,6 +95,11 @@ namespace MotionRecorder
             }
         }
 
+        public void stop()
+        {
+            viz.stop();
+        }
+
         private List<double[]> arrayToList(double[,] arry)
         {
             List<double[]> lst = new List<double[]>();

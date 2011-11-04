@@ -16,7 +16,6 @@ namespace Controller
         private static readonly float SPEED = 0.2f;
         
         private MotionProxy proxy;
-        private NaoSkeleton lastUpdate;
         private TextToSpeechProxy tts;
 
         public NaoController(string ip)
@@ -24,7 +23,6 @@ namespace Controller
             try
             {
                 this.ip = ip;
-                lastUpdate = null;
                 proxy = new MotionProxy(ip, 9559);
                 this.setStiffness(1.0f);
             }
@@ -64,7 +62,9 @@ namespace Controller
                                 time, time, time, time};
 
             proxy.stiffnessInterpolation(joints, stiff, times);
-             * 
+            
+            */
+            /*
             proxy.stiffnessInterpolation("Head", stiffness, time);
             proxy.stiffnessInterpolation("LShoulderPitch", stiffness, time);
             proxy.stiffnessInterpolation("RShoulderPitch", stiffness, time);
@@ -86,64 +86,71 @@ namespace Controller
             proxy.stiffnessInterpolation("LHipRoll", stiffness, time);
             proxy.stiffnessInterpolation("RHipRoll", stiffness, time);
             proxy.stiffnessInterpolation("LAnkleRoll", stiffness, time);
-            proxy.stiffnessInterpolation("RAnkleRoll", stiffness, time);*/
+            proxy.stiffnessInterpolation("RAnkleRoll", stiffness, time);
+            */
         }
 
         public void update(NaoSkeleton skeleton)
         {
             // Given 0 to rotational angle for now
-            NaoPosition nao_pos = skeleton.Position;
-            NaoPosition nao_pos_prv = lastUpdate.Position;
-            proxy.walkTo(nao_pos.X - nao_pos_prv.X, nao_pos.Y - nao_pos_prv.Y, 0.0f);
-            
-            String[] angleTypes = {"LShoulderPitch", "RShoulderPitch", 
+            if (!skeleton.isUpperBody)
+            {
+                NaoPosition nao_pos = skeleton.Position;
+                Console.Out.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                Console.WriteLine("Walking to x: " + -nao_pos.Z + " y: " + -nao_pos.X);
+                proxy.walkTo(-nao_pos.Z, -nao_pos.X, 0.0f);
+            }
+            else
+            {
+                List<String> angleTypes = new List<String>() {"LShoulderPitch", "RShoulderPitch", 
                                       "LShoulderRoll", "RShoulderRoll", 
                                       "LElbowYaw", "RElbowYaw", 
                                       "LElbowRoll", "RElbowRoll"};
-            float[] angles = {skeleton.LeftShoulder.Pitch, skeleton.RightShoulder.Pitch, 
+                List<float> angles = new List<float>() { skeleton.LeftShoulder.Pitch, skeleton.RightShoulder.Pitch, 
                                  skeleton.LeftShoulder.Roll, skeleton.RightShoulder.Roll, 
                                  skeleton.LeftElbow.Yaw, skeleton.RightElbow.Yaw, 
                                  skeleton.LeftElbow.Roll, skeleton.RightElbow.Roll};
 
-            //proxy.angleInterpolationWithSpeed(angleTypes, angles, SPEED);
-            /*
-            //Shoulder Angles
-            proxy.setAngles("LShoulderPitch", (float)skeleton.LeftShoulder.Pitch, SPEED);
-            proxy.setAngles("RShoulderPitch", (float)skeleton.RightShoulder.Pitch, SPEED);
-            proxy.setAngles("LShoulderRoll", (float)skeleton.LeftShoulder.Roll, SPEED);
-            proxy.setAngles("RShoulderRoll", (float)skeleton.RightShoulder.Roll, SPEED);
+                proxy.setAngles(angleTypes, angles, SPEED);
 
-            //Elbow Angles
-            proxy.setAngles("LElbowYaw", (float)skeleton.LeftElbow.Yaw, SPEED);
-            proxy.setAngles("RElbowYaw", (float)skeleton.RightElbow.Yaw, SPEED);
-            proxy.setAngles("LElbowRoll", (float)skeleton.LeftElbow.Roll, SPEED);
-            proxy.setAngles("RElbowRoll", (float)skeleton.RightElbow.Roll, SPEED);*/
+                /* //Shoulder Angles
+                 proxy.setAngles("LShoulderPitch", (float)skeleton.LeftShoulder.Pitch, SPEED);
+                 proxy.setAngles("RShoulderPitch", (float)skeleton.RightShoulder.Pitch, SPEED);
+                 proxy.setAngles("LShoulderRoll", (float)skeleton.LeftShoulder.Roll, SPEED);
+                 proxy.setAngles("RShoulderRoll", (float)skeleton.RightShoulder.Roll, SPEED);
 
-            //Shoulder Angles
-            Console.Out.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            Console.Out.WriteLine("LShoulderPitch: " + (float)skeleton.LeftShoulder.Pitch);
-            Console.Out.WriteLine("RShoulderPitch: " + (float)skeleton.RightShoulder.Pitch);
-            Console.Out.WriteLine("LShoulderRoll: " + (float)skeleton.LeftShoulder.Roll);
-            Console.Out.WriteLine("RShoulderRoll: " + (float)skeleton.RightShoulder.Roll);
+                 //Elbow Angles
+                 proxy.setAngles("LElbowYaw", (float)skeleton.LeftElbow.Yaw, SPEED);
+                 proxy.setAngles("RElbowYaw", (float)skeleton.RightElbow.Yaw, SPEED);
+                 proxy.setAngles("LElbowRoll", (float)skeleton.LeftElbow.Roll, SPEED);
+                 proxy.setAngles("RElbowRoll", (float)skeleton.RightElbow.Roll, SPEED);*/
 
-            //Elbow Angles
-            Console.Out.WriteLine("LElbowYaw: " + (float)skeleton.LeftElbow.Yaw);
-            Console.Out.WriteLine("RElbowYaw: " + (float)skeleton.RightElbow.Yaw);
-            Console.Out.WriteLine("LElbowRoll: " + (float)skeleton.LeftElbow.Roll);
-            Console.Out.WriteLine("RElbowRoll: " + (float)skeleton.RightElbow.Roll);
-             
-            //Wrist Angles
-            //proxy.setAngles("LWristYaw", (float)skeleton.LeftWrist.getYaw(), SPEED);
-            //proxy.setAngles("RWristYaw", (float)skeleton.RightWrist.getYaw(), SPEED);
+                //Shoulder Angles
+                Console.Out.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+                Console.Out.WriteLine("LShoulderPitch: " + (float)skeleton.LeftShoulder.Pitch);
+                Console.Out.WriteLine("RShoulderPitch: " + (float)skeleton.RightShoulder.Pitch);
+                Console.Out.WriteLine("LShoulderRoll: " + (float)skeleton.LeftShoulder.Roll);
+                Console.Out.WriteLine("RShoulderRoll: " + (float)skeleton.RightShoulder.Roll);
 
-            //Hand
-            //proxy.setAngles("LHand", (float)skeleton.LeftHand.isOpen(), SPEED);
-            //proxy.setAngles("RHand", (float)skeleton.RightHand.isOpen(), SPEED);
+                //Elbow Angles
+                Console.Out.WriteLine("LElbowYaw: " + (float)skeleton.LeftElbow.Yaw);
+                Console.Out.WriteLine("RElbowYaw: " + (float)skeleton.RightElbow.Yaw);
+                Console.Out.WriteLine("LElbowRoll: " + (float)skeleton.LeftElbow.Roll);
+                Console.Out.WriteLine("RElbowRoll: " + (float)skeleton.RightElbow.Roll);
+
+                //Wrist Angles
+                //proxy.setAngles("LWristYaw", (float)skeleton.LeftWrist.getYaw(), SPEED);
+                //proxy.setAngles("RWristYaw", (float)skeleton.RightWrist.getYaw(), SPEED);
+
+                //Hand
+                //proxy.setAngles("LHand", (float)skeleton.LeftHand.isOpen(), SPEED);
+                //proxy.setAngles("RHand", (float)skeleton.RightHand.isOpen(), SPEED);
+            }
         }
 
         public void speak(String context)
         {
-            tts = new TextToSpeechProxy(this.ip, 9559);
+            tts = new TextToSpeechProxy("128.208.4.225", 9559);
             tts.say(context);
         }
     }

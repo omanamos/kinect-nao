@@ -26,10 +26,21 @@ namespace DataStore
 
         public void append(ActionSequence<T> other)
         {
+            other.reset();
             while (other.hasNext())
             {
                 this.states.Add(other.next());
             }
+        }
+
+        public int size()
+        {
+            return this.states.Count;
+        }
+
+        public T get(int i)
+        {
+            return this.states[i];
         }
 
         public void append(T other)
@@ -39,7 +50,7 @@ namespace DataStore
 
         public bool isEmpty()
         {
-            return this.states.Count > 0;
+            return this.states.Count == 0;
         }
 
         public bool hasNext()
@@ -66,13 +77,12 @@ namespace DataStore
         public ActionSequence(SerializationInfo info, StreamingContext ctxt)
         {
             this.states = (List<T>)info.GetValue("states", typeof(List<T>));
-            this.cur = (int)info.GetValue("cur", typeof(int));
+            this.cur = -1;
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
         {
             info.AddValue("states", states);
-            info.AddValue("cur", cur);
         }
 
         /// <summary>

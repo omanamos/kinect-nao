@@ -19,9 +19,8 @@ namespace Recognizer
         KinectSequencer sequencer;
         private  bool waitingForStableSequence = true;
 
-        public HumanActionRecognizer(int pollInterval = 33)
+        public HumanActionRecognizer(string path, int pollInterval = 33)
         {
-            string path = @"Z:/WindowsFolders/MyDocs/Capstone/NaoKinectTest/Recognizer/HmmData";
             rec = new HMMRecognizer(path);
 
             sequencer = new KinectSequencer();
@@ -95,6 +94,11 @@ namespace Recognizer
         public void stop()
         {
             t.Stop();
+        }
+
+        public void exit()
+        {
+            sequencer.stop();
         }
 
         public delegate void RecordingEventHandler(object sender, EventArgs e);

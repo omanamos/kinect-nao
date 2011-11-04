@@ -79,7 +79,7 @@ namespace Recognizer
             double[] likelihoods = new double[positionActionClassifier.Classes];
             int cls = positionActionClassifier.Compute(action.toArray(), out likelihoods);
             double maxPositionLikelihood = likelihoods.Max();
-            maxPositionLikelihood = 0;
+            //maxPositionLikelihood = 0;
             // Compute most likely joint action
             likelihoods = new double[jointActionClassifier.Classes];
             int jointCls = jointActionClassifier.Compute(action.toArray(true), out likelihoods);

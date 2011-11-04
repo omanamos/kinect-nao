@@ -120,10 +120,11 @@ namespace Recognizer
         public void SaveToDisk()
         {
             // Ensure path exists.
+            /*
             if (!Directory.Exists(this.directory))
                 Directory.CreateDirectory(this.directory);
-
-            Stream stream = File.Open(this.directory + SERIALIZATION_PREFIX + name + SERIALIZATION_SUFFIX, FileMode.Create);
+            */
+            Stream stream = File.Open("Z:/dev/kinect-nao/Recognizer/HmmData/" + SERIALIZATION_PREFIX + name + SERIALIZATION_SUFFIX, FileMode.Create);
             BinaryFormatter bf = new BinaryFormatter();
 
             bf.Serialize(stream, this);

@@ -75,6 +75,8 @@ namespace DataStore
 
         public ActionLibrary(SerializationInfo info, StreamingContext ctxt)
         {
+            this.cachedStates = new ActionSequence<NaoSkeleton>();
+            this.cachedName = null;
             // retrieving keys and values separately as dictionary is not serializable
             String[] keys = (String[])info.GetValue("keys", typeof(String[]));
             ActionSequence<NaoSkeleton>[] values = (ActionSequence<NaoSkeleton>[])info.GetValue("values",
@@ -111,7 +113,7 @@ namespace DataStore
 
         public static ActionLibrary load(String path)
         {
-            ActionLibrary al = new ActionLibrary();
+            /*ActionLibrary al = new ActionLibrary();
             
             Stream stream = File.Open(path, FileMode.Open);
             BinaryFormatter bformatter = new BinaryFormatter();
@@ -119,7 +121,53 @@ namespace DataStore
             al = (ActionLibrary)bformatter.Deserialize(stream);
             stream.Close();
 
-            return al;
+            return al;*/
+
+
+            Dictionary<string, string> actions = new Dictionary<string, string>();
+            actions["raise the roof"] = "raisetheroof";
+            actions["walk forward"] = "walkforward";
+            actions["walk left"] = "walkleft";
+            actions["walk back"] = "walkbackward";
+            actions["walk right"] = "walkright";
+            actions["wave right"] = "waveright";
+            actions["wave left"] = "waveleft";
+            string filename = "Z:/dev/kinect-nao/recordings/";
+            ActionLibrary lib = new ActionLibrary();
+
+            foreach (string actionName in actions.Keys)
+            {
+                List<HumanSkeleton> seq = new List<HumanSkeleton>();
+                using (StreamReader s = new StreamReader(filename + actions[actionName] + "/"
+                    + actionName + "1.rec"))
+                {
+                    while (!s.EndOfStream)
+                    {
+                        seq.Add(new HumanSkeleton(s.ReadLine()));
+                    }
+                }
+
+                ActionSequence<NaoSkeleton> naoSeq = new ActionSequence<NaoSkeleton>();
+                foreach (HumanSkeleton h in seq)
+                {
+                    AngleConverter ac = new AngleConverter(h);
+                    naoSeq.append(ac.getNaoSkeleton());
+                }
+
+                if (actionName.StartsWith("walk"))
+                {
+                    NaoSkeleton start = naoSeq.get(0);
+                    NaoSkeleton end = naoSeq.get(naoSeq.size() - 1);
+                    NaoSkeleton diff = new NaoSkeleton(new NaoPosition(end.Position.X - start.Position.X, end.Position.Y - start.Position.Y, end.Position.Z - start.Position.Z));
+                    naoSeq = new ActionSequence<NaoSkeleton>();
+                    naoSeq.append(diff);
+                }
+                lib.appendToCache(naoSeq);
+                lib.setCachedName(actionName);
+                lib.saveCache();
+            }
+
+            return lib;
         }
 
         public void save(String path)
